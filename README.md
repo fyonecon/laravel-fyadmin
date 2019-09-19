@@ -2,7 +2,7 @@
 ## laravel框架
 
 > 目前框架版本为laravel5.8
-> php>7.1
++ php>7.1.3
 
 ## 文档
 
@@ -28,15 +28,15 @@
 + /Play/ 系统对外开放、系统对接的接口目录
 + /Statistic/ 系统统计目录，包括前台、后台
 + /Test/ 测试专用控制器
-...
++ ...
 + /Common/common.php 公用函数
 + /Http/Controller/AdminSafeCheck.php 用于后台管理系统接口的安全验证控制器继承
 + /Http/Controller/AppSafeCheck.php 用于前台应用的接口的安全验证控制器继承
 + /Http/Controller/OpenSafeCheck.php 奔放的安全验证控制器继承
-...
++ ...
 + /storage/upload_file/ 文件上传目录，权限777
 + /view-admin/ 后台管理系统前端代码目录
-...
++ ...
 
 
 ## 2019-09-19
