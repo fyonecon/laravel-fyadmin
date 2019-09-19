@@ -1,3 +1,46 @@
+
+## laravel框架
+
+> 目前框架版本为laravel5.8
+> php>7.1
+
+## 文档
+
++ 文档在目录/view-admin/里面，备份也在/view-admin/目录里面
+
+## laravel-fyadmin说明
+> 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义。
+
++ 支持七牛云、图片压缩、任意格式文件上传
++ 自定义对称加密算法
++ 自定义的接口安全验证
++ 脱离模板渲染，采用前后端分离的PHP后台管理系统的渲染
++ 微信网页授权、微信网页分享
++ 获取用户精准IP+城市
++ ...
+
+## 控制器目录说明
+
++ /Admin/ 后台管理系统的接口目录
++ /App/ 前台应用的接口目录
++ /Kit/ 放自定义框架、插件的目录
++ /Log/ 日志接口统一存放目录
++ /Play/ 系统对外开放、系统对接的接口目录
++ /Statistic/ 系统统计目录，包括前台、后台
++ /Test/ 测试专用控制器
+...
++ /Common/common.php 公用函数
++ /Http/Controller/AdminSafeCheck.php 用于后台管理系统接口的安全验证控制器继承
++ /Http/Controller/AppSafeCheck.php 用于前台应用的接口的安全验证控制器继承
++ /Http/Controller/OpenSafeCheck.php 奔放的安全验证控制器继承
+...
++ /storage/upload_file/ 文件上传目录，权限777
++ /view-admin/ 后台管理系统前端代码目录
+...
+
+
+## 2019-09-19
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">

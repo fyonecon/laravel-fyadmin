@@ -24,24 +24,24 @@ class Secret extends Controller{
      *
      * */
 
-    private $secret_key = 'tran19'; // 自定义。 密钥：字母、数字、中文等任意内容
-    private $salt = 19; // 自定义。 容错度：数字范围[0, 63]
+    private $secret_key = 'fya19'; // 自定义。 密钥：字母、数字、中文等任意内容
+    private $salt = 17; // 自定义。 容错度：数字范围[0, 63]
     private $s = 1; // 不要更改
 
     protected $_replace = [ // 自定义。 建议使用不一样的[0]对应[1]，密钥对照表
-        ['=', 'aoi1c'], // 必须
-        ['/', 'gje1n'], // 必须
+        ['=', 'oai1c'], // 必须
+        ['/', 'gej1n'], // 必须
         ['+', 'hbua1'], // 必须
-        ['3', '2nveg'],
+        ['3', '2nvge'],
         ['7', '16lo0'],
-        ['8', 'i00o6'],
-        ['9', 'uhws4'],
-        ['L', 'aiinh'],
+        ['8', 'uhws4'],
+        ['9', 'i00o6'],
+        ['L', 'l0ieg'],
         ['M', 'lmvsk'],
-        ['W', 'l0ieg'],
-        ['z', 'al2fj'],
+        ['W', 'aiinh'],
+        ['z', 'e1ifg'],
         ['y', 'a4bcs'],
-        ['d', 'e1ifg'],
+        ['d', 'al2fj'],
         ['p', 'jaoi0'],
     ];
 

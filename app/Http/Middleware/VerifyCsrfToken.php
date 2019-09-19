@@ -19,11 +19,11 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        // 跨域白名单路由
-        'post',
-        'get',
-        'match',
-        'kit/upload_base64_file',
-        'kit/upload_form_file',
+        // 声明跨域白名单路由、接口
+        'play/upload_base64_file',
+        'play/upload_form_file',
+        'play/save_base64_img',
+        'play/save_url_img',
+
     ];
 }
