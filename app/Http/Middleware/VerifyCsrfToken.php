@@ -18,12 +18,15 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array
      */
-    protected $except = [
-        // 声明跨域白名单路由、接口
+    protected $except = [ // 声明跨域白名单路由、接口
+        // 系统扩展服务所依赖的的接口，不可更改
         'play/upload_base64_file',
         'play/upload_form_file',
         'play/save_base64_img',
         'play/save_url_img',
+        'play/log',
+
+        // 其他
 
     ];
 }

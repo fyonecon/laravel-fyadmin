@@ -10,15 +10,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Kit\Secret;
+use App\Http\Kit\IpInfo;
+use App\Http\Kit\Secret;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
-class OpenSafeCheck extends Controller{
+class OpenSafeCheck{
 
     /*
      * 预先执行，安全检测
+     * 1. 记录请求IP
      * */
     public function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
@@ -27,6 +30,9 @@ class OpenSafeCheck extends Controller{
 
     }
 
+    /*
+     * 将IP加入Redis-list，以便统计
+     * */
 
 
 

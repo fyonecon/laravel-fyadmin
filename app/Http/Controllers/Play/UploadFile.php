@@ -10,14 +10,13 @@
 namespace App\Http\Controllers\Play;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\OpenSafeCheck;
-use App\Http\Controllers\Kit\QiniuConfig;
+use App\Http\Kit\QiniuConfig;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
-class UploadFile extends OpenSafeCheck {
+class UploadFile extends Controller {
 
     /*
      * 预先执行，安全检测
@@ -37,7 +36,7 @@ class UploadFile extends OpenSafeCheck {
                 'msg'=> '此接口仅限POST，拒绝访问(UploadFile)',
                 'content'=> '',
             ];
-            // exit(json_encode($back, JSON_UNESCAPED_UNICODE));
+            //exit(json_encode($back, JSON_UNESCAPED_UNICODE));
         }
 
         // 检测白名单文件上传Token
@@ -47,11 +46,11 @@ class UploadFile extends OpenSafeCheck {
                 'msg'=> 'upload_token验证失败，文件无法上传(UploadFile)',
                 'content'=> '',
             ];
-            // exit(json_encode($back, JSON_UNESCAPED_UNICODE));
+            //exit(json_encode($back, JSON_UNESCAPED_UNICODE));
         }
 
         // 检测文件夹及文件夹权限
-        $path = laravel_path_info()[1]."/upload_file/"; //文件绝对路径
+        $path = path_info()['storage_path']."/upload_file/"; //文件绝对路径
         $filename = $path;
         if(!file_exists($filename)){
             //检查是否有该文件夹，如果没有就创建，并给予最高权限
@@ -101,7 +100,7 @@ class UploadFile extends OpenSafeCheck {
             return array("status"=>0,"msg"=>"base64 is null", "content"=> []);
         }
 
-        $path = laravel_path_info()[1]."/upload_file/base64_img";
+        $path = path_info()['storage_path']."/upload_file/base64_img";
         $file = "/".date('Ymd', time())."/";
 
         //匹配出图片的格式
@@ -150,6 +149,10 @@ class UploadFile extends OpenSafeCheck {
                 $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
                 $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
 
+                // 记录日志
+                $log = new Log();
+                $log->write_log('save_base64_img', $qiniu_info);
+
                 $state = 1;
                 $msg = "文件操作成功；x1低画质，x2中画质，x3高画质，x4原图；七牛云返回值情况请查看键qiniu_info。";
                 $content =  ["file_name"=>$file_name, "qiniu_info"=>$res_x3];
@@ -164,6 +167,10 @@ class UploadFile extends OpenSafeCheck {
             $state = 0;
             $msg = "不是base64字符串编码的图片";
             $content =  [];
+
+            // 记录日志
+            $log = new Log();
+            $log->write_log('save_base64_img', $msg);
         }
 
         $back = [
@@ -192,7 +199,7 @@ class UploadFile extends OpenSafeCheck {
             return array("status"=>0,"msg"=>"img_url is null", 'content'=> []);
         }
 
-        $path = laravel_path_info()[1]."/upload_file/url_img"; //文件绝对路径
+        $path = path_info()['storage_path']."/upload_file/url_img"; //文件绝对路径
         $file = "/".date('Ymd', time())."/";
 
         $pattern = substr(strrchr($img_url, '.'), 1); // 正则文件格式
@@ -206,6 +213,10 @@ class UploadFile extends OpenSafeCheck {
             $state = 0;
             $msg = "文件似乎无后缀。";
             $content =  [];
+
+            // 记录日志
+            $log = new Log();
+            $log->write_log('save_url_img', [$img_url, $msg]);
         }else{
 
             $img_name = $this->file_name_create($pattern); // 随机生成文件名
@@ -248,6 +259,10 @@ class UploadFile extends OpenSafeCheck {
             $file_name = [$file_name_x1, $file_name_x2, $file_name_x3, $file_name_x4];
             $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
             $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
+
+            // 记录日志
+            $log = new Log();
+            $log->write_log('save_url_img', $qiniu_info);
 
             $state = 1;
             $msg = "文件操作成功；x1低画质，x2中画质，x3高画质，x4原图；七牛云返回值情况请查看键qiniu_info。";
@@ -318,7 +333,7 @@ class UploadFile extends OpenSafeCheck {
             if ($file_size < 2048*10000){ // 20M
 
                 // 开始-保存文件
-                $path = laravel_path_info()[1]."/upload_file/files/"; //文件绝对路径
+                $path = path_info()['storage_path']."/upload_file/files/"; //文件绝对路径
 
                 $new_name = $this->file_name_create($file_class); // 随机生成文件名;
                 $new_file = $path.$new_name.'.'.$_file_type;
@@ -379,6 +394,10 @@ class UploadFile extends OpenSafeCheck {
                             $msg = "文件操作成功；七牛云返回值情况请查看键qiniu_info。";
                             $content =  ["file_name"=>$new_name.'.'.$_file_type, "file_size"=>$file_size, "server_info"=>$new_file, "qiniu_info"=>$res];
 
+                            // 记录日志
+                            $log = new Log();
+                            $log->write_log('upload_base64_file', $res);
+
                         }
 
                     }else{
@@ -401,6 +420,10 @@ class UploadFile extends OpenSafeCheck {
                     "文件类型"=> $file_type,
                     "文件大小"=> $file_size,
                 ];
+
+                // 记录日志
+                $log = new Log();
+                $log->write_log('upload_base64_file', [$file_size, $msg]);
             }
 
 
@@ -449,7 +472,7 @@ class UploadFile extends OpenSafeCheck {
                 if($file_size < 2048*10000){ // 20M
 
                     /*开始*/
-                    $upload_path = laravel_path_info()[1]."/upload_file/files/"; // 文件保存目录
+                    $upload_path = path_info()['storage_path']."/upload_file/files/"; // 文件保存目录
                     $type = array("mp3", "js", "css", "jpg", "jpeg", "png", "bmp", "ico", "gif", "mp4");//允许上传文件的类型
 
                     $ext = strtolower($this->file_ext($_FILES['file']['name']));
@@ -521,7 +544,12 @@ class UploadFile extends OpenSafeCheck {
                                     $state = 1;
                                     $msg = "文件操作成功；七牛云返回值情况请查看键qiniu_info。";
                                     $content =  ["file_name"=>$filename.'.'.$ext, "file_size"=>$file_size, "server_info"=>$file, "qiniu_info"=>$res];
+
                                 }
+
+                                // 记录日志
+                                $log = new Log();
+                                $log->write_log('upload_form_file', [$content, $msg]);
 
                             }
                         }else{
@@ -540,6 +568,10 @@ class UploadFile extends OpenSafeCheck {
                         "文件类型"=>  $_FILES['file']['type'],
                         "文件大小"=> $_FILES['file']['size'],
                     ];
+
+                    // 记录日志
+                    $log = new Log();
+                    $log->write_log('upload_form_file', [$file_size, $msg]);
                 }
             }
 
@@ -547,6 +579,10 @@ class UploadFile extends OpenSafeCheck {
             $state = 0;
             $msg = "小程序请使用wx.UploadFile()上传文件，或web使用form+post上传。";
             $content = "";
+
+            // 记录日志
+            $log = new Log();
+            $log->write_log('upload_form_file', [$msg]);
         }
 
         $back = [

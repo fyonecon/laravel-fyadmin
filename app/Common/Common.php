@@ -1,73 +1,80 @@
 <?php
 /*
  * 不需要封装的公共函数，公共参数配置
- *
+ * 全部文件都可调用
  * */
 
+function test_common($txt){
+    return $txt.'=Common.php';
+}
 
+// 配置七牛云
+function config_qiniu(){
+    $info = [
+        'accessKey'=> 'sjLe9UAn3b8pNAqZW5CiKmNhiQYguqDr7_0_Iv7Q',
+        'secretKey'=> 'CXUZS1F55dI6DimtMFOKLziJ4v34Wijo7NOnzu25',
+        'domain'=> ['http:qiniu-test.meishid.cn/'], // 多域名卸载数组里即可
+        'bucket'=> 'test', // bucket名字
+    ];
+    return $info;
+}
 
-function test_common($test){
-    return time()."test-".$test;
+// 配置自定义日志
+function config_log(){
+    $info = [
+        'local_server_ip'=> server_info()['server_ip'], // 本机服务器IP ，动态获取
+        'log_server_ip'=> '127.0.0.1', // 存放日志的服务器IP，没有的话就填127.0.0.1
+        'timeout_day' => 14, // 多少天后自定删除，[7, 100]
+    ];
+    return $info;
 }
 
 
-/**
- *@todo: 判断是否为post
- */
-if(!function_exists('is_post')){
-    function is_post()
-    {
-        return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='POST';
-    }
-}
-
-/**
- *@todo: 判断是否为get
- */
-if(!function_exists('is_get')){
-    function is_get()
-    {
-        return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='GET';
-    }
-}
-
-/**
- *@todo: 判断是否为ajax
- */
-if(!function_exists('is_ajax')){
-    function is_ajax()
-    {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH'])=='XMLHTTPREQUEST';
-    }
-}
-
-/**
- *@todo: 判断是否为命令行模式
- */
-if(!function_exists('is_cli')) {
-    function is_cli()
-    {
-        return (PHP_SAPI === 'cli' OR defined('STDIN'));
-    }
-}
-
-
-// 返回重要目录的绝对路径
-function laravel_path_info(){
-    $path = [
-        base_path(),
-        storage_path(),
-        $_SERVER['DOCUMENT_ROOT'],
-        [
-            __DIR__,
-            config_path(),
-            app_path(),
-        ],
+// 获取重要目录的绝对路径
+function path_info(){
+    $info = [
+        'base_path'=> base_path(),
+        'storage_path'=> storage_path(),
+        'server_root'=> $_SERVER['DOCUMENT_ROOT'],
+        'dir'=> __DIR__,
+        'app_path'=> app_path(),
+        'config_path'=> config_path(),
     ];
 
-    return $path;
+    return $info;
 }
 
+// 获取laravel项目主文件夹
+function main_filename(){
+
+    $len = strlen(path_info()['server_root']);
+    $str = path_info()['base_path'];
+    $res = substr($str, $len+1);
+
+    return $res;
+}
+
+// 获取服务器信息
+function server_info(){
+
+    $server_ip =  $_SERVER['SERVER_ADDR'];
+    $server_os = php_uname();
+    $php_version = PHP_VERSION;
+    $upload_size = get_cfg_var("upload_max_filesize")?get_cfg_var("upload_max_filesize"):"不允许上传文件";
+    $do_timeout = get_cfg_var("max_execution_time")."秒";
+    $server_time = date("Y-m-d H:i:s");
+
+    $info = [
+        'server_ip'=> $server_ip,
+        'server_os'=> $server_os,
+        'php_version'=> $php_version,
+        'upload_size'=> $upload_size,
+        'do_timeout'=> $do_timeout,
+        'server_time'=> $server_time,
+    ];
+
+    return $info;
+}
 
 // 密码加密算法，非对称
 function pwd_encode($string){
@@ -200,4 +207,95 @@ function group_arrays($info, $db_key1, $db_key2){
 
     return $have;
 }
+
+
+// post请求
+function request_post($url='', $post_data=[]) { // 模拟post请求
+    if (empty($url) || empty($post_data)) {
+        return false;
+    }
+
+    $o = "";
+    foreach ( $post_data as $k => $v )
+    {
+        $o.= "$k=" . urlencode( $v ). "&" ;
+    }
+    $post_data = substr($o,0,-1);
+
+    $post_url = $url;
+    $curlPost = $post_data;
+    $ch = curl_init();//初始化curl
+    curl_setopt($ch, CURLOPT_URL,$post_url);//抓取指定网页
+    curl_setopt($ch, CURLOPT_HEADER, 0);//设置header
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//要求结果为字符串且输出到屏幕上
+    curl_setopt($ch, CURLOPT_POST, 1);//post提交方式
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
+    $data = curl_exec($ch);//运行curl
+    curl_close($ch);
+
+    //print_r($data);
+
+    return $data;
+    //return json_decode($data, true);
+}
+
+// get请求
+function request_get($get_url = ''){
+
+    //初始化
+    $curl = curl_init();
+    //设置抓取的url
+    curl_setopt($curl, CURLOPT_URL, $get_url);
+    //设置头文件的信息作为数据流输出
+    curl_setopt($curl, CURLOPT_HEADER, 1);
+    //设置获取的信息以文件流的形式返回，而不是直接输出。
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    //执行命令
+    $data = curl_exec($curl);
+    //关闭URL请求
+    curl_close($curl);
+
+    return $data;
+}
+
+
+/**
+ *@todo: 判断是否为post
+ */
+if(!function_exists('is_post')){
+    function is_post()
+    {
+        return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='POST';
+    }
+}
+/**
+ *@todo: 判断是否为get
+ */
+if(!function_exists('is_get')){
+    function is_get()
+    {
+        return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='GET';
+    }
+}
+/**
+ *@todo: 判断是否为ajax
+ */
+if(!function_exists('is_ajax')){
+    function is_ajax()
+    {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH'])=='XMLHTTPREQUEST';
+    }
+}
+/**
+ *@todo: 判断是否为命令行模式
+ */
+if(!function_exists('is_cli')) {
+    function is_cli()
+    {
+        return (PHP_SAPI === 'cli' OR defined('STDIN'));
+    }
+}
+
+
+
 

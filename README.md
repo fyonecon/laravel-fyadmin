@@ -2,7 +2,8 @@
 ## laravel框架
 
 > 目前框架版本为laravel5.8
-+ php>7.1.3
++ php > 7.1.3
++ Redis
 
 ## 文档
 
@@ -21,13 +22,14 @@
 
 ## 控制器目录说明
 
-+ /Admin/ 后台管理系统的接口目录
-+ /App/ 前台应用的接口目录
-+ /Kit/ 放自定义框架、插件的目录
-+ /Log/ 日志接口统一存放目录
-+ /Play/ 系统对外开放、系统对接的接口目录
-+ /Statistic/ 系统统计目录，包括前台、后台
-+ /Test/ 测试专用控制器
++ /Http/Controllers/Admin/ 后台管理系统的接口目录
++ /Http/Controllers/App/ 前台应用的接口目录
++ /Http/Controllers/Log/ 日志接口统一存放目录
++ /Http/Controllers/Play/ 系统对外开放、系统对接的接口目录
++ /Http/Controllers/Statistic/ 系统统计目录，包括前台、后台
++ /Http/Controllers/Test/ 测试专用控制器
++ ...
++ /Http/Kit/ 放自定义框架、插件的目录
 + ...
 + /Common/common.php 公用函数
 + /Http/Controller/AdminSafeCheck.php 用于后台管理系统接口的安全验证控制器继承
@@ -37,6 +39,19 @@
 + /storage/upload_file/ 文件上传目录，权限777
 + /view-admin/ 后台管理系统前端代码目录
 + ...
+
+## 接口返回：
++ state接口返回的状态：
+  + 1有数据，
+  + 0无数据，
+  + 2接口数据请求条件不足或未知错误，
+  + 403拒绝访问，
+  + 301app需要升级；
++ msg：解释state的数字代表的意思；
++ paging：分页【data_length所有数据的条数, limit每页最多数据条数, page当前第几页，】;
++ test_data：测试或查看返回的数据；
++ content：请求数据的内容；
+
 
 
 ## 2019-09-19

@@ -62,6 +62,7 @@ Route::group(['prefix' => 'app'], function (){
  * */
 Route::group(['prefix' => 'play'], function (){
     Route::match(['get', 'post'], '/', function () {return 'play-group-route';});
+    Route::match(['get', 'post'], '/log', 'Play\Log@log'); // 写自定义日志接口
     Route::match(['get', 'post'], '/get_that_ip', 'Play\GetIp@get_that_ip'); // 获取用户IP
     Route::match(['get', 'post'], '/upload_base64_file', 'Play\UploadFile@upload_base64_file'); // 上传文件base64法
     Route::match(['get', 'post'], '/upload_form_file', 'Play\UploadFile@upload_form_file'); // 上传文件form法

@@ -6,7 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Kit\Secret;
+use App\Http\Kit\Secret;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
