@@ -1,6 +1,9 @@
 <?php
-/* 《Admin类控制器拦截》
- * Admin安全验证拦截
+
+/**
+ *  https://github.com/fyonecon/laravel-fyadmin
+ * 《Admin目录拦截器》
+ *  Admin安全验证拦截，各控制器需要继承于此。
  * */
 
 namespace App\Http\Controllers;
@@ -17,13 +20,12 @@ class AdminSafeCheck extends Controller{
      * 预先执行，安全检测
      * */
     public function __construct(Request $request){
-
         header('Access-Control-Allow-Origin:*');
 
-        $method = $request->input('method');
+        $method = $request->input('debug_api_method');
+        if ($method == debug_api_method()){ // 跳过检测
 
-        if ($method == 'get'){
-            // 跳过检测
+
 
         }else{
 

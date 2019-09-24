@@ -4,4 +4,4 @@
 
 > 系统对外的某些复用接口
 
-> 此处只继承Controller
+> 此处只继承OpenController

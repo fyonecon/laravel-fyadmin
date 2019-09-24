@@ -34,8 +34,8 @@ Route::group(['prefix' => 'safe'], function (){
  * */
 Route::group(['prefix' => 'test'], function (){
     Route::get('/', function () {return 'test-group-route';});
-    Route::match(['get', 'post'], '/get', 'Test\Test1Controller@get');
-    Route::match(['get', 'post'], '/test1', 'Test\Test1Controller@test1');
+    Route::match(['get', 'post'], '/get', 'Test\Test1@get');
+    Route::match(['get', 'post'], '/test1', 'Test\Test1@test1');
 });
 
 
@@ -44,7 +44,10 @@ Route::group(['prefix' => 'test'], function (){
  * */
 Route::group(['prefix' => 'admin'], function (){
     Route::match(['get', 'post'], '/', function () {return 'admin-group';});
-    Route::match(['get', 'post'], '/get', 'Admin\LoginController@get');
+    // 登录
+    Route::match(['get', 'post'], '/login', 'Admin\AdminLogin@login');
+    // 登录状态检测
+    Route::match(['get', 'post'], '/login_check', 'Admin\AdminLogin@login_check');
 });
 
 
@@ -62,12 +65,12 @@ Route::group(['prefix' => 'app'], function (){
  * */
 Route::group(['prefix' => 'play'], function (){
     Route::match(['get', 'post'], '/', function () {return 'play-group-route';});
-    Route::match(['get', 'post'], '/log', 'Play\Log@log'); // 写自定义日志接口
-    Route::match(['get', 'post'], '/get_that_ip', 'Play\GetIp@get_that_ip'); // 获取用户IP
-    Route::match(['get', 'post'], '/upload_base64_file', 'Play\UploadFile@upload_base64_file'); // 上传文件base64法
-    Route::match(['get', 'post'], '/upload_form_file', 'Play\UploadFile@upload_form_file'); // 上传文件form法
-    Route::match(['get', 'post'], '/save_url_img', 'Play\UploadFile@save_url_img'); // 保存url地址的图片
-    Route::match(['get', 'post'], '/save_base64_img', 'Play\UploadFile@save_base64_img'); // 保存base64格式的图片
+    Route::match(['get', 'post'], '/log', 'Play\Log@log'); // 写自定义日志接口，只用于服务器间的日志记录
+    Route::match(['get', 'post'], '/get_that_ip', 'Play\IpApi@get_that_ip'); // 获取用户IP
+    Route::match(['get', 'post'], '/upload_base64_file', 'Play\UploadFileApi@upload_base64_file'); // 上传文件base64法
+    Route::match(['get', 'post'], '/upload_form_file', 'Play\UploadFileApi@upload_form_file'); // 上传文件form法
+    Route::match(['get', 'post'], '/save_url_img', 'Play\UploadFileApi@save_url_img'); // 保存url地址的图片
+    Route::match(['get', 'post'], '/save_base64_img', 'Play\UploadFileApi@save_base64_img'); // 保存base64格式的图片
 });
 
 

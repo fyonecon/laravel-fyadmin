@@ -8,6 +8,17 @@ function test_common($txt){
     return $txt.'=Common.php';
 }
 
+// 配置微信网页分享
+function config_wxweb_share(){
+    $info = [
+        'appid'=> 'wxa10039a58c872225',
+        'appsecret'=> '36f2a2f470add51145edf3179171502b',
+        'http_host'=> '', //
+    ];
+    return $info;
+}
+
+
 // 配置七牛云
 function config_qiniu(){
     $info = [
@@ -76,12 +87,27 @@ function server_info(){
     return $info;
 }
 
+// 将laravel查询数据后返回的stdClass Object格式转换成array
+function json_to_array($object_data){
+    return json_decode(json_encode($object_data),true);
+}
+// 将array转换成json
+function array_to_json($array_data){
+    return json_encode($array_data, JSON_UNESCAPED_UNICODE);
+}
+
 // 密码加密算法，非对称
 function pwd_encode($string){
-    $salt = '-PwD2019';
+    $salt = '-PwD2019_fy';
     $encode = md5($string.$salt);
 
     return $encode;
+}
+
+// 接口调试可跳过的安全检测的情况
+function debug_api_method(){
+
+    return date('Ymd');
 }
 
 // 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105

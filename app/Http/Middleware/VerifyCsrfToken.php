@@ -25,8 +25,11 @@ class VerifyCsrfToken extends Middleware
         'play/save_base64_img',
         'play/save_url_img',
         'play/log',
+        'admin/login',
+        'admin/login_check'
 
         // 其他
+
 
     ];
 }
