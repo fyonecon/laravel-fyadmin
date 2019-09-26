@@ -64,17 +64,17 @@
 > test2222+test2222
 
 ## 启动Redis，安装好Redis后需要启动redis
-+ 检查是否有6379端口
-> netstat -ntlp
-+ 启动服务
-> cd /root/redis-5.0.5
-> src/redis-server
-+ 测试是否运行成功
-> src/redis-cli
-> 出现“127.0.0.1:6379> ”即代表成功。
++ 检查是否有6379端口  
+> netstat -ntlp  
++ 启动服务  
+> cd /root/redis-5.0.5  
+> src/redis-server  
++ 测试是否运行成功  
+> src/redis-cli  
+> 出现“127.0.0.1:6379> ”即代表成功。  
 
-##  
-## 2019-09-19
+##   
+## 2019-09-19  
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
