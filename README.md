@@ -58,6 +58,7 @@
 + 初始化composer
 > composer install
 + 有报错就解决一下报错，然后再次运行composer install，一般会报错1.文件引入的错误；2.vendor依赖的错误。
++ storage目录和bootstrap目录777权限
 > 无报错就能运行项目了。
 
 ## 后台账号+密码 

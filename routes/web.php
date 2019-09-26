@@ -13,10 +13,10 @@
 
 Route::get('/', function () {
     $time = date('Y-m-d');
-    return redirect("route/?route=test&time=$time");
+    return redirect("index.php/route/?route=test&time=$time");
 });
 Route::get('/route', function () {
-    return view('welcome');
+    return 'view';
 });
 Route::get('/init', 'InitSysController@get'); // 系统初始化检测，检测环境必要参数
 
@@ -25,7 +25,7 @@ Route::get('/init', 'InitSysController@get'); // 系统初始化检测，检测�
  * */
 Route::group(['prefix' => 'safe'], function (){
     Route::get('/', function () {return 'safe-group-route';});
-    Route::match(['get', 'post'], '/get', 'AdminSafeCheck@get');
+    Route::match(['get', 'post'], '/open_redis', 'OpenController@open_redis');
 });
 
 
@@ -77,14 +77,6 @@ Route::group(['prefix' => 'enhance'], function (){
     Route::match(['get', 'post'], '/upload_form_file', 'Enhance\UploadFileApi@upload_form_file'); // 上传文件form法
     Route::match(['get', 'post'], '/save_url_img', 'Enhance\UploadFileApi@save_url_img'); // 保存url地址的图片
     Route::match(['get', 'post'], '/save_base64_img', 'Enhance\UploadFileApi@save_base64_img'); // 保存base64格式的图片
-});
-
-
-/*
- * Statistic目录下的
- * */
-Route::group(['prefix' => 'statistic'], function (){
-    Route::match(['get', 'post'], '/', function () {return 'statistic-group-route';});
 });
 
 

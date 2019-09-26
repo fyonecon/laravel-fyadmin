@@ -12,6 +12,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Kit\Secret;
+use App\Http\Controllers\BlockRequest;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class OpenController extends Controller{
             $info = [
                 'debug_key'=> debug_key(),
                 'debug_key_input'=> $debug_key,
-                'ip'=> $ip->get_user_ip(),
+                'ip'=> $ip->get_real_ip(),
             ];
             $log->write_log('OpenController debug_key', $info);
 
@@ -43,24 +44,24 @@ class OpenController extends Controller{
             if (!is_post()){
                 $back = [
                     'state'=> 403,
-                    'msg'=> '此接口仅限POST，拒绝访问(Admin)',
-                    'content'=> [$ip->get_user_ip(), 'is_get()'],
+                    'msg'=> '此接口仅限POST，拒绝访问(Open)',
+                    'content'=> [$ip->get_real_ip(), 'is_get()'],
                 ];
                 $log->write_log('OpenController !is_post()', $back);
                 exit(json_encode($back, JSON_UNESCAPED_UNICODE));
             }else{
                 // 其他操作
 
+                // 缓存用户的IP
+                $user_ip = $ip->get_real_ip();
+                $block = new BlockRequest();
+                $block->cache_user_ip($user_ip);
+
             }
 
         }
 
     }
-
-    /*
-     * 将IP加入Redis-list，以便统计
-     * */
-
 
 
 }

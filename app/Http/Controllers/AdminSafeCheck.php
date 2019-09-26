@@ -36,7 +36,7 @@ class AdminSafeCheck extends Controller{
             $info = [
                 'debug_key'=> debug_key(),
                 'debug_key_input'=> $debug_key,
-                'ip'=> $ip->get_user_ip(),
+                'ip'=> $ip->get_real_ip(),
             ];
             $log->write_log('AdminSafeCheck debug_key', $info);
 
@@ -79,24 +79,25 @@ class AdminSafeCheck extends Controller{
                     $user_safe_state = $user_safe['state'];
                     $user_safe_msg = $user_safe['msg'];
                     if ($user_safe_state == 1){
-                        // 屏蔽爬虫接口请求
+
                         $block = new BlockRequest();
-                        $back = $block->block_request($user_login_name);
+                        $back = $block->block_request('AdminSafeCheck', $user_login_name);
 
                         $block_state = $back['state'];
                         $block_msg = $back['msg'];
                         $block_content = $back['content'];
 
                         if ($block_state == 0){
-                            $back = [
+                            $_back = [
                                 'state'=> $block_state,
                                 'msg'=> $block_msg,
                                 'content'=> $block_content,
                             ];
-                            $log->write_log('AdminSafeCheck Block_request()', $back);
-                            exit(json_encode($back, JSON_UNESCAPED_UNICODE));
+                            $log->write_log('AdminSafeCheck Block_request()', $_back);
+                            exit(json_encode($_back, JSON_UNESCAPED_UNICODE));
                         }else{
                             // 检测通过
+
 
                         }
 
