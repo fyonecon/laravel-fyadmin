@@ -34,7 +34,7 @@ class CustomLog{
         }
         //打开文件资源通道 不存在则自动创建
         $fp = fopen($url, "a");
-        fwrite($fp, date("Y-m-d H:i:s ").var_export($string, true)."\r\n");      // 写入文件
+        fwrite($fp, date("Y-m-d H:i:s ").var_export($string, true)."\r\n\n");      // 写入文件
         fclose($fp);//关闭资源通道
 
         // 删除过期文件
@@ -59,6 +59,8 @@ class CustomLog{
             }
 
         }
+
+        return ['set_log_file_has_done.', $name, date('YmdHis')];
 
     }
 

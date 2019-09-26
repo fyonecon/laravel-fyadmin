@@ -36,8 +36,15 @@ function config_log(){
         'local_server_ip'=> server_info()['server_ip'], // 本机服务器IP ，动态获取
         'log_server_ip'=> '127.0.0.1', // 存放日志的服务器IP，没有的话就填127.0.0.1
         'timeout_day' => 14, // 多少天后自定删除，[7, 100]
+        'log_key'=> debug_key(),
     ];
     return $info;
+}
+
+// 配置调试key，方便调试环境
+function config_debug_key(){
+
+    return date('dmY');
 }
 
 
@@ -105,9 +112,9 @@ function pwd_encode($string){
 }
 
 // 接口调试可跳过的安全检测的情况
-function debug_api_method(){
+function debug_key(){
 
-    return date('Ymd');
+    return config_debug_key();
 }
 
 // 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105
@@ -262,7 +269,6 @@ function request_post($url='', $post_data=[]) { // 模拟post请求
     //print_r($data);
 
     return $data;
-    //return json_decode($data, true);
 }
 
 // get请求

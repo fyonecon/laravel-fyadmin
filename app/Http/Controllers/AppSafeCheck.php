@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\BlockRequest;
 use App\Http\Kit\Secret;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,13 +18,13 @@ use Exception;
 class AppSafeCheck extends Controller{
 
     /*
-         * 预先执行，安全检测
-         * */
+     * 预先执行，安全检测
+     * */
     public function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
 
-        $method = $request->input('debug_api_method');
-        if ($method == debug_api_method()){ // 跳过检测
+        $debug_key = $request->input('debug_key');
+        if ($debug_key == debug_key()){ // 跳过检测
 
 
         }else{

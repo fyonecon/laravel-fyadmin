@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Test;
 use App\Http\Controllers\AdminSafeCheck;
 use App\Http\Controllers\AppSafeCheck;
 use App\Http\Controllers\OpenController;
-use App\Http\Controllers\Play\GetIp;
+use App\Http\Controllers\Enhance\GetIp;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Play\Log;
+use App\Http\Controllers\Enhance\Log;
 
 class Test1 extends AdminSafeCheck {
 

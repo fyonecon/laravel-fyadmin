@@ -70,7 +70,7 @@ class AdminUser extends AdminSafeCheck{
             'content'=>$content,
         ];
 
-        return json_encode($back, JSON_UNESCAPED_UNICODE);
+        return array_to_json($back);
 
     }
 
@@ -81,42 +81,41 @@ class AdminUser extends AdminSafeCheck{
      *      全部用户的数据
      * */
     public function list_user(Request $request){
-
         $user_id = $request->input('user_id');
-
         $page = $request->input('page');
         if (!$page){
-            $page = 1;
+            $page = 0;
         }
 
         if ($user_id === 'all'){
 
-            $res = Db::table('admin_user')->alias('a')
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 2)
-                ->order('a.user_id' ,'desc')
-                ->page($page, page_limit())
-                ->select('a.user_id, a.user_name, a.user_login_name, a.user_remark, a.create_time, a.update_time, a.father_user_id')
-                ->select();
+            $res = Db::table('admin_user')
+                ->where('user_state', 1)
+                ->whereIn('user_level', [2, 3])
+                ->orderBy('user_id' ,'desc')
+                ->limit(page_limit())
+                ->offset($page)
+                ->select('user_id', 'user_name', 'user_login_name', 'user_remark', 'create_time', 'update_time', 'father_user_id')
+                ->get();
 
-            $data_count = Db::table('admin_user')->alias('a')
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 2)
-                ->order('a.user_id' ,'desc')
+            $total = Db::table('admin_user')
+                ->where('user_state', 1)
+                ->whereIn('user_level', [2, 3])
+                ->orderBy('user_id' ,'desc')
 
-                ->count('a.user_id');
+                ->count('user_id');
 
         }else{
 
-            $res = Db::table('admin_user')->alias('a')
-                ->where('a.user_id', $user_id)
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 2)
-                ->order('a.user_id' ,'desc')
-                ->select('a.user_id, a.user_name, a.user_login_name, a.user_remark, a.create_time, a.update_time')
-                ->find();
+            $res = Db::table('admin_user')
+                ->where('user_id', $user_id)
+                ->where('user_state', 1)
+                ->whereIn('user_level', [2, 3])
+                ->orderBy('user_id' ,'desc')
+                ->select('user_id', 'user_name', 'user_login_name', 'user_remark', 'create_time', 'update_time')
+                ->first();
 
-            $data_count = count($res);
+            $total = 1;
         }
 
         if ($res){
@@ -132,9 +131,11 @@ class AdminUser extends AdminSafeCheck{
         $back = [
             'state'=>$state,
             'msg'=>$msg,
-            'page'=>$page,
-            'limit'=>page_limit(),
-            'data_count'=> $data_count,
+            'paging'=> [
+                'total'=>$total,
+                'limit'=>page_limit(),
+                'page'=>$page,
+            ],
             'content'=>$content,
         ];
 
@@ -171,12 +172,10 @@ class AdminUser extends AdminSafeCheck{
             $user_login_pwd = pwd_encode($user_login_pwd);
 
             $data = [
-
                 'user_name'=> $user_name,
                 'user_login_name'=> $user_login_name,
                 'user_login_pwd'=> $user_login_pwd,
                 'user_remark'=> $user_remark,
-
                 'update_time'=> $update_time,
             ];
 
@@ -196,15 +195,13 @@ class AdminUser extends AdminSafeCheck{
 
         }
 
-
-
         $back = [
             'state'=>$state,
             'msg'=>$msg,
             'content'=>$content,
         ];
 
-        return json_encode($back, JSON_UNESCAPED_UNICODE);
+        return array_to_json($back);
 
     }
 
@@ -240,7 +237,7 @@ class AdminUser extends AdminSafeCheck{
             'content'=>$content,
         ];
 
-        return json_encode($back, JSON_UNESCAPED_UNICODE);
+        return array_to_json($back);
 
     }
 
@@ -272,32 +269,31 @@ class AdminUser extends AdminSafeCheck{
 
         if ($user_id === 'all'){
 
-            $res = Db::table('admin_user')->alias('a')
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 1)
-                ->order('a.user_id' ,'desc')
-                ->page($page, page_limit())
-                ->select('a.user_id, a.user_name, a.user_login_name, a.user_remark, a.create_time, a.update_time, a.father_user_id')
-                ->select();
+            $res = Db::table('admin_user')
+                ->where('user_state', 1)
+                ->whereIn('user_level', [1])
+                ->orderBy('user_id' ,'desc')
+                ->select('user_id', 'user_name', 'user_login_name', 'user_remark', 'create_time', 'update_time', 'father_user_id')
+                ->get();
 
-            $data_count = Db::table('admin_user')->alias('a')
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 1)
-                ->order('a.user_id' ,'desc')
+            $total = Db::table('admin_user')
+                ->where('user_state', 1)
+                ->whereIn('user_level', [1])
+                ->orderBy('user_id' ,'desc')
 
-                ->count('a.user_id');
+                ->count('user_id');
 
         }else{
 
-            $res = Db::table('admin_user')->alias('a')
-                ->where('a.user_id', $user_id)
-                ->where('a.user_state', 1)
-                ->where('a.user_level', 1)
-                ->order('a.user_id' ,'desc')
-                ->select('a.user_id, a.user_name, a.user_login_name, a.user_remark, a.create_time, a.update_time')
-                ->find();
+            $res = Db::table('admin_user')
+                ->where('user_id', $user_id)
+                ->where('user_state', 1)
+                ->whereIn('user_level', [1])
+                ->orderBy('user_id' ,'desc')
+                ->select('user_id', 'user_name', 'user_login_name', 'user_remark', 'create_time', 'update_time')
+                ->first();
 
-            $data_count = count($res);
+            $total = 1;
         }
 
         if ($res){
@@ -313,13 +309,15 @@ class AdminUser extends AdminSafeCheck{
         $back = [
             'state'=>$state,
             'msg'=>$msg,
-            'page'=>$page,
-            'limit'=>page_limit(),
-            'data_count'=> $data_count,
+            'paging'=> [
+                'total'=>$total,
+                'limit'=>page_limit(),
+                'page'=>$page,
+            ],
             'content'=>$content,
         ];
 
-        return json_encode($back, JSON_UNESCAPED_UNICODE);
+        return array_to_json($back);
 
     }
 

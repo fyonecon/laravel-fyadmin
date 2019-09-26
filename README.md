@@ -24,9 +24,7 @@
 
 + /Http/Controllers/Admin/ 后台管理系统的接口目录
 + /Http/Controllers/App/ 前台应用的接口目录
-+ /Http/Controllers/Log/ 日志接口统一存放目录
 + /Http/Controllers/Play/ 系统对外开放、系统对接的接口目录
-+ /Http/Controllers/Statistic/ 系统统计目录，包括前台、后台
 + /Http/Controllers/Test/ 测试专用控制器
 + ...
 + /Http/Kit/ 放自定义框架、插件的目录
@@ -52,7 +50,15 @@
 + test_data：测试或查看返回的数据；
 + content：请求数据的内容；
 
-
+## laravel项目部署(cd到composer.json同目录)
++ 检查是否安装composer
+> composer --version
++ 更换composer镜像
+> composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
++ 初始化composer
+> composer install
++ 有报错就解决一下报错，然后再次运行composer install，一般会报错1.文件引入的错误；2.vendor依赖的错误。
+> 无报错就能运行项目了。
 
 ## 2019-09-19
 

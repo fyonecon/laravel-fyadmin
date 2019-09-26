@@ -4,7 +4,7 @@
  * 采集访问的IP、城市等数据
  * */
 
-namespace App\Http\Controllers\Play;
+namespace App\Http\Controllers\Enhance;
 
 use App\Http\Controllers\OpenController;
 use Illuminate\Support\Facades\DB;

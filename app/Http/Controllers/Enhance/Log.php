@@ -5,7 +5,7 @@
  * 不对外开放Api，只用于服务器间的通讯。
  * */
 
-namespace App\Http\Controllers\Play;
+namespace App\Http\Controllers\Enhance;
 
 use App\Http\Controllers\Controller;
 use App\Http\Kit\CustomLog;
@@ -23,7 +23,7 @@ class Log extends Controller {
     /*
      * 本系统中请调用此函数
      * */
-    public function write_log($where, $data){
+    public function write_log($title, $data){
 
         // 检查文件夹
         $this->path = path_info()['storage_path']."/custom_log/";
@@ -35,9 +35,9 @@ class Log extends Controller {
         $this->local_server_ip = config_log()['local_server_ip']; // 本地/此服务器
         $this->log_server_ip = config_log()['log_server_ip']; // 日志服务器接口
 
-        $api = 'http://'.$this->log_server_ip.'/'.main_filename().'/public/index.php/play/log';
+        $api = 'http://'.$this->log_server_ip.'/'.main_filename().'/public/index.php/enhance/log';
         $array = [
-            'where'=> json_encode($where, JSON_UNESCAPED_UNICODE),
+            'title'=> json_encode($title, JSON_UNESCAPED_UNICODE),
             'data'=> json_encode($data, JSON_UNESCAPED_UNICODE),
             'local_server_ip'=> json_encode($this->local_server_ip, JSON_UNESCAPED_UNICODE),
         ];
@@ -56,13 +56,14 @@ class Log extends Controller {
     public function log(Request $request){
         header('Access-Control-Allow-Origin:*');
 
-        $where = $request->input('where'); // 日志来源
+        $title = $request->input('title'); // 日志来源
         $data = $request->input('data'); // 日志内容
         $local_server_ip = $request->input('local_server_ip'); // 对方服务器IP
 
         $log = new CustomLog();
-        $log->set_log($where, $data, $local_server_ip);
+        $res = $log->set_log($title, $data, $local_server_ip);
 
+        return $res;
     }
 
 

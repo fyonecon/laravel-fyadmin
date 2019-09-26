@@ -48,6 +48,12 @@ Route::group(['prefix' => 'admin'], function (){
     Route::match(['get', 'post'], '/login', 'Admin\AdminLogin@login');
     // 登录状态检测
     Route::match(['get', 'post'], '/login_check', 'Admin\AdminLogin@login_check');
+
+    Route::match(['get', 'post'], '/add_user', 'Admin\AdminUser@add_user');
+    Route::match(['get', 'post'], '/list_user', 'Admin\AdminUser@list_user');
+    Route::match(['get', 'post'], '/edit_user', 'Admin\AdminUser@edit_user');
+    Route::match(['get', 'post'], '/del_user', 'Admin\AdminUser@del_user');
+    Route::match(['get', 'post'], '/list_admin', 'Admin\AdminUser@list_admin');
 });
 
 
@@ -61,16 +67,16 @@ Route::group(['prefix' => 'app'], function (){
 
 
 /*
- * Play目录下的
+ * Enhance目录下的
  * */
-Route::group(['prefix' => 'play'], function (){
+Route::group(['prefix' => 'enhance'], function (){
     Route::match(['get', 'post'], '/', function () {return 'play-group-route';});
-    Route::match(['get', 'post'], '/log', 'Play\Log@log'); // 写自定义日志接口，只用于服务器间的日志记录
-    Route::match(['get', 'post'], '/get_that_ip', 'Play\IpApi@get_that_ip'); // 获取用户IP
-    Route::match(['get', 'post'], '/upload_base64_file', 'Play\UploadFileApi@upload_base64_file'); // 上传文件base64法
-    Route::match(['get', 'post'], '/upload_form_file', 'Play\UploadFileApi@upload_form_file'); // 上传文件form法
-    Route::match(['get', 'post'], '/save_url_img', 'Play\UploadFileApi@save_url_img'); // 保存url地址的图片
-    Route::match(['get', 'post'], '/save_base64_img', 'Play\UploadFileApi@save_base64_img'); // 保存base64格式的图片
+    Route::match(['get', 'post'], '/log', 'Enhance\Log@log'); // 写自定义日志接口，只用于服务器间的日志记录
+    Route::match(['get', 'post'], '/get_that_ip', 'Enhance\IpApi@get_that_ip'); // 获取用户IP
+    Route::match(['get', 'post'], '/upload_base64_file', 'Enhance\UploadFileApi@upload_base64_file'); // 上传文件base64法
+    Route::match(['get', 'post'], '/upload_form_file', 'Enhance\UploadFileApi@upload_form_file'); // 上传文件form法
+    Route::match(['get', 'post'], '/save_url_img', 'Enhance\UploadFileApi@save_url_img'); // 保存url地址的图片
+    Route::match(['get', 'post'], '/save_base64_img', 'Enhance\UploadFileApi@save_base64_img'); // 保存base64格式的图片
 });
 
 

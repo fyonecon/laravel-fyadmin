@@ -46,11 +46,12 @@ include './common/config.php';
 
     <script>
         /*
-        * js兼容到安卓5和iOS10.3
+        * js兼容到安卓5.1和iOS10.3
         * */
-        var web_url = "<?=$web_url?>";
-        var file_url = "<?=$file_url?>";
-        var api_url = "<?=$api_url?>";
+        const web_url = "<?=$web_url?>";
+        const file_url = "<?=$file_url?>";
+        const api_url = "<?=$api_url?>";
+        const app_class = "<?=$app_class?>";
 
     </script>
 </head>

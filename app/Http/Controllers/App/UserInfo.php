@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\App;
 
 
-use Illuminate\Http\Request; // 接收参数
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
-class UserController extends Controller{
+class UserInfo extends Controller{
 
 
     public function info(Request $request){

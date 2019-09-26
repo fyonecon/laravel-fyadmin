@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-use App\Http\Controllers\Play\Log;
+use App\Http\Controllers\Enhance\Log;
 use App\Http\Kit\IpInfo;
 
 class OpenController extends Controller{
@@ -26,17 +26,18 @@ class OpenController extends Controller{
      * */
     public function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
-        $method = $request->input('debug_api_method');
+        $debug_key = $request->input('debug_key');
         // 记录调试日志
         $log = new Log();
         $ip = new IpInfo();
-        if ($method == debug_api_method()){ // 跳过检测
+        if ($debug_key == debug_key()){ // 跳过检测
             $info = [
-                'debug_api_method'=> debug_api_method(),
-                'method_input'=> $method,
+                'debug_key'=> debug_key(),
+                'debug_key_input'=> $debug_key,
                 'ip'=> $ip->get_user_ip(),
             ];
-            $log->write_log('debug_api_method', $info);
+            $log->write_log('OpenController debug_key', $info);
+
         }else{
 
             if (!is_post()){
@@ -45,7 +46,7 @@ class OpenController extends Controller{
                     'msg'=> '此接口仅限POST，拒绝访问(Admin)',
                     'content'=> [$ip->get_user_ip(), 'is_get()'],
                 ];
-                $log->write_log('debug_api_method', $back);
+                $log->write_log('OpenController !is_post()', $back);
                 exit(json_encode($back, JSON_UNESCAPED_UNICODE));
             }else{
                 // 其他操作

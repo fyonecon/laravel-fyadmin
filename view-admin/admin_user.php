@@ -92,7 +92,6 @@ include './common/head.php';
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
-<!--                    <td>-</td>-->
                     <td>-</td>
                     <td class="">
 <!--                        <span class="list-operation-span select-none bg-blue">修改</span>-->
@@ -172,13 +171,14 @@ include './common/head.php';
 
         /*请求数据*/
         $.ajax({
-            url: api_url+"admin/admin_user/add_user",
+            url: api_url+"admin/add_user",
             type: "POST",
             dataType: "json",
             async: true,
             data: { // 字典数据
                 login_name: login_name,
                 login_token: login_token,
+                app_class: app_class,
 
                 father_user_id: father_user_id,
                 user_level: user_level,
@@ -228,13 +228,14 @@ include './common/head.php';
 
         /*请求数据*/
         $.ajax({
-            url: api_url+"admin/admin_user/edit_user",
+            url: api_url+"admin/edit_user",
             type: "POST",
             dataType: "json",
             async: true,
             data: { // 字典数据
                 login_name: login_name,
                 login_token: login_token,
+                app_class: app_class,
 
                 user_id: user_id,
                 user_name: user_name,
@@ -279,13 +280,14 @@ include './common/head.php';
 
         /*请求数据*/
         $.ajax({
-            url: api_url+"admin/admin_user/del_user",
+            url: api_url+"admin/del_user",
             type: "POST",
             dataType: "json",
             async: true,
             data: { // 字典数据
                 login_name: login_name,
                 login_token: login_token,
+                app_class: app_class,
 
                 user_id: user_id,
             },
@@ -326,13 +328,14 @@ include './common/head.php';
 
         /*请求数据*/
         $.ajax({
-            url: api_url+"admin/admin_user/list_user",
+            url: api_url+"admin/list_user",
             type: "POST",
             dataType: "json",
             async: true,
             data: { // 字典数据
                 login_name: login_name,
                 login_token: login_token,
+                app_class: app_class,
 
                 page: page,
 
@@ -398,16 +401,14 @@ include './common/head.php';
 
 
                     // 处理分页
-                    var page = datas.page;
-                    var limit = datas.limit;
-                    var count = datas.data_count;
+                    var page = datas.paging.page;
+                    var limit = datas.paging.limit;
+                    var count = datas.paging.data_count;
                     var tab = getThisUrlParam("", "tab");
                     tab = tab?tab:0;
                     var url = web_url+"user.php?nav=user#tab="+tab;
                     setTimeout(function () {
-
                         paginition(limit, count, url, "navigation-div", "navigation-page", "page_user", page)
-
                     }, 200);
 
                 }
@@ -419,20 +420,21 @@ include './common/head.php';
         });
 
     }
-    
-    
+
+
     // 管理员列表
     function list_admin(page) {
 
         /*请求数据*/
         $.ajax({
-            url: api_url+"admin/admin_user/list_admin",
+            url: api_url+"admin/list_admin",
             type: "POST",
             dataType: "json",
             async: true,
             data: { // 字典数据
                 login_name: login_name,
                 login_token: login_token,
+                app_class: app_class,
 
                 page: page,
 
@@ -501,7 +503,7 @@ include './common/head.php';
         });
 
     }
-    
+
 
 </script>
 

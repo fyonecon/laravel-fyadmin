@@ -7,7 +7,7 @@
  * 3.form保存数据流文件（支持wx.UploadFile()，支持web-form提交）；
  * */
 
-namespace App\Http\Controllers\Play;
+namespace App\Http\Controllers\Enhance;
 
 use App\Http\Controllers\Controller;
 use App\Http\Kit\QiniuConfig;
