@@ -74,7 +74,11 @@
 > src/redis-cli  
 > 出现“127.0.0.1:6379> ”即代表成功。  
 
-##   
+## 升级laravel版本
+> 在composer.json里面更改laravel版本
+> 然后运行composer update命令即可升级版本  
+
+##  
 ## 2019-09-19  
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>

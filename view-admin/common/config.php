@@ -5,9 +5,9 @@
  * */
 
 
-$web_url    = '/laravel58/view-admin/'; // 页面跳转地址
-$file_url   = '/laravel58/view-admin/'; // 静态文件主地址
-$api_url    = '/laravel58/public/index.php/'; // api地址
+$web_url    = '/laravel60/view-admin/'; // 页面跳转地址
+$file_url   = '/laravel60/view-admin/'; // 静态文件主地址
+$api_url    = '/laravel60/public/index.php/'; // api地址
 $app_class  = 'admin'; // 接口来源
 
 $head_time  = time();  // 静态清除缓存用
