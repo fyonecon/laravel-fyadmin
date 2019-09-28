@@ -9,35 +9,26 @@
 
 namespace App\Http\Controllers\Enhance;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\OpenController;
 use App\Http\Kit\QiniuConfig;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
-class UploadFileApi extends Controller {
+class UploadFileApi extends OpenController {
 
     /*
      * 预先执行，安全检测
      * */
-    public function __construct(Request $request){
-        //parent::__construct($request);
+    final function __construct(Request $request){
+        parent::__construct($request);
+
         header('Access-Control-Allow-Origin:*');
 
         $upload_token = $request->input('upload_token');
 
         $token_array = ["test2019", "test"];
-
-        // 拦截请求方法
-        if (!is_post()){
-            $back = [
-                'state'=> 403,
-                'msg'=> '此接口仅限POST，拒绝访问(UploadFile)',
-                'content'=> '',
-            ];
-            //exit(json_encode($back, JSON_UNESCAPED_UNICODE));
-        }
 
         // 检测白名单文件上传Token
         if (!in_array($upload_token, $token_array)){

@@ -23,16 +23,19 @@ class BlockRequest extends Controller{
 
         $key = $prefix;
         $user_key = $key.'##'.$_key;
+        $user_value = 'null';
 
-        if(Redis::exists($user_key)){ // 存在则查
-            $request_num = Redis::get($user_key);
-            $request_num = $request_num+1;
-        }else{ // 不存在则初试
-            $request_num = 1;
-        }
-        Redis::set($user_key, $request_num);
+//        if(Redis::exists($user_key)){ // 存在则查
+//            $request_num = Redis::get($user_key);
+//            $request_num = $request_num+1;
+//        }else{ // 不存在则初试
+//            $request_num = 1;
+//        }
+//        Redis::set($user_key, $request_num);
+//
+//        $user_value = $user_key.'##'.$request_num;
 
-        $user_value = $user_key.'##'.$request_num;
+
 
         $back = [
             'state'=> 1,
@@ -51,14 +54,16 @@ class BlockRequest extends Controller{
         $key = 'user_ip';
         $user_key = $key.'##'.$user_ip;
 
-        if(Redis::exists($user_key)){ // 存在则查
-            $request_num = Redis::get($user_key);
-            $request_num = $request_num+1;
-        }else{ // 不存在则初试
-            $request_num = 1;
-        }
-        Redis::set($user_key, $request_num);
-        $user_value = $user_key.'##'.$request_num;
+        $user_value = 'null';
+
+//        if(Redis::exists($user_key)){ // 存在则查
+//            $request_num = Redis::get($user_key);
+//            $request_num = $request_num+1;
+//        }else{ // 不存在则初试
+//            $request_num = 1;
+//        }
+//        Redis::set($user_key, $request_num);
+//        $user_value = $user_key.'##'.$request_num;
 
 
         return $user_value;

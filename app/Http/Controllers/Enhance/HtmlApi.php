@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 
 class HtmlApi extends Controller{
 
-    public function common_js(Request $request){
+
+    final function common_js(Request $request){
 
         $type = $request->input('type');
 

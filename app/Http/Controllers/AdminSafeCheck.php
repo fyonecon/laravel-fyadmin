@@ -23,7 +23,7 @@ class AdminSafeCheck extends Controller{
     /*
      * 预先执行，安全检测
      * */
-    public function __construct(Request $request){
+    protected function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
 
         $post = $request->input();

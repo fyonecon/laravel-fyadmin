@@ -11,6 +11,12 @@ use Exception;
 
 class AdminLogin extends OpenController {
 
+    public function __construct(Request $request){
+        parent::__construct($request);
+
+
+    }
+
 
     /*
      * 用户登录

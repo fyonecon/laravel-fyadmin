@@ -25,7 +25,7 @@ class OpenController extends Controller{
     /*
      * 预先执行，安全检测
      * */
-    public function __construct(Request $request){
+    protected function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
         $debug_key = $request->input('debug_key');
         // 记录调试日志

@@ -20,7 +20,7 @@ class AppSafeCheck extends Controller{
     /*
      * 预先执行，安全检测
      * */
-    public function __construct(Request $request){
+    protected function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');
 
         $debug_key = $request->input('debug_key');

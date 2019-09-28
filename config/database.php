@@ -46,7 +46,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '192.168.186.129'), // 数据库IP，推荐首先使用内网IP
+            'host' => env('DB_HOST', '192.168.186.131'), // 数据库IP，推荐首先使用内网IP
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'demo_laravel'), // 数据库名
             'username' => env('DB_USERNAME', 'root2'),

@@ -7,10 +7,11 @@
 namespace App\Http\Controllers\Enhance;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class InitSys Extends Controller{
 
-    public function init_sys(){
+    protected function init_sys(){
 
 
 

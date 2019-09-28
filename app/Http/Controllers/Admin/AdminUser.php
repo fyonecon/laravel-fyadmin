@@ -10,6 +10,12 @@ use Exception;
 
 class AdminUser extends AdminSafeCheck{
 
+    public function __construct(Request $request){
+        parent::__construct($request);
+
+
+    }
+
     /*
      * 添加用户
      * 功能：管理员添加用户
