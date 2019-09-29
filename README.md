@@ -1,7 +1,7 @@
 
 ## laravel框架
 
-> 目前框架版本为laravel5.8
+> 目前框架版本为laravel6.0.4  
 + php > 7.1.3
 + Redis
 
