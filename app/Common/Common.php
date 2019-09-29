@@ -1,8 +1,9 @@
 <?php
-/*
+/**
  * 不需要封装的公共函数，公共参数配置
- * 全部文件都可调用
+ * 框架任何文件都可调用
  * */
+
 
 function test_common($txt){
     return $txt.'=Common.php';
@@ -30,6 +31,7 @@ function config_qiniu(){
     return $info;
 }
 
+
 // 配置自定义日志
 function config_log(){
     $info = [
@@ -41,9 +43,9 @@ function config_log(){
     return $info;
 }
 
+
 // 配置调试key，方便调试环境
 function config_debug_key(){
-
     return date('dmY');
 }
 
@@ -62,6 +64,7 @@ function path_info(){
     return $info;
 }
 
+
 // 获取laravel项目主文件夹
 function main_filename(){
 
@@ -74,7 +77,6 @@ function main_filename(){
 
 // 获取服务器信息
 function server_info(){
-
     $server_ip =  $_SERVER['SERVER_ADDR'];
     $server_os = php_uname();
     $php_version = PHP_VERSION;
@@ -94,6 +96,7 @@ function server_info(){
     return $info;
 }
 
+
 // 将laravel查询数据后返回的stdClass Object格式转换成array
 function json_to_array($object_data){
     return json_decode(json_encode($object_data),true);
@@ -103,6 +106,7 @@ function array_to_json($array_data){
     return json_encode($array_data, JSON_UNESCAPED_UNICODE);
 }
 
+
 // 密码加密算法，非对称
 function pwd_encode($string){
     $salt = '-PwD2019_fy';
@@ -111,44 +115,67 @@ function pwd_encode($string){
     return $encode;
 }
 
+
 // 接口调试可跳过的安全检测的情况
 function debug_key(){
-
     return config_debug_key();
 }
 
-// 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105
-function to_time($_time){
 
+// 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105010159
+function to_time($_time){
     return date('YmdHis', strtotime($_time));
 }
-
 // 将时间转换成2019-01-05
 function date_time($to_time){
-
     return date('Y-m-d H:i:s', strtotime($to_time));
 }
+// 当前格式化时间
+function now_time(){
+    return date('YmdHis');
+}
+// 开始时间
+function start_time($day){
+    return day_time($day);
+}
+// 结束时间
+function end_time($day){
+    return day_time($day);
+}
+// 计算过去N天的日期
+function day_time($day){
+    if ($day<0){
+        $day = "$day";
+    }else if ($day>0){
+        $day = "+$day";
+    }else{ // 包括其他格式错误的情况
+        $day = "+0";
+    }
+    $back = [date("Y-m-d", strtotime("$day day")), date("YmdHis", strtotime("$day day")), $day];
+    return $back;
+}
+
 
 // 生成token
-// token = 时间戳&随机字母数组
+// token = 时间戳#&随机字母数组
 function make_token(){
     $_time = time();
     $_rand = get_rand_string(17, 23);
     $token = $_time.'#&'.$_rand;
     return $token;
 }
-
 // 分解token
 function split_token($token){
     $back = explode('#&', $token);
     return $back;
 }
 
+
 // 分页每页数据量
 function page_limit(){
-
     return 30;
 }
+
 
 // 获取固定长度的数字字母随机数
 function get_rand_string($len, $chars=null){
@@ -161,6 +188,7 @@ function get_rand_string($len, $chars=null){
     }
     return $str;
 }
+
 
 // 二维，根据某个键的数值排序
 function order_key_array($array, $key, $order){
@@ -199,7 +227,6 @@ function order_key_array($array, $key, $order){
 // group_array(未去重数组, 要去重的json键名)
 // 服务器环境不能使用group语法,所以做这个去重
 function group_array($info, $db_key){
-
     $have = [];
     $array = [];
     for($m=0; $m<count($info); $m++){
@@ -247,10 +274,8 @@ function request_post($url='', $post_data=[]) { // 模拟post请求
     if (empty($url) || empty($post_data)) {
         return false;
     }
-
     $o = "";
-    foreach ( $post_data as $k => $v )
-    {
+    foreach ( $post_data as $k => $v ) {
         $o.= "$k=" . urlencode( $v ). "&" ;
     }
     $post_data = substr($o,0,-1);
@@ -267,13 +292,10 @@ function request_post($url='', $post_data=[]) { // 模拟post请求
     curl_close($ch);
 
     //print_r($data);
-
     return $data;
 }
-
 // get请求
 function request_get($get_url = ''){
-
     //初始化
     $curl = curl_init();
     //设置抓取的url
@@ -291,43 +313,174 @@ function request_get($get_url = ''){
 }
 
 
-/**
- *@todo: 判断是否为post
- */
+// 判断是否为post
 if(!function_exists('is_post')){
-    function is_post()
-    {
+    function is_post(){
         return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='POST';
     }
 }
-/**
- *@todo: 判断是否为get
- */
+// 判断是否为get
 if(!function_exists('is_get')){
-    function is_get()
-    {
+    function is_get(){
         return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='GET';
     }
 }
-/**
- *@todo: 判断是否为ajax
- */
+// 判断是否为ajax
 if(!function_exists('is_ajax')){
-    function is_ajax()
-    {
+    function is_ajax(){
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH'])=='XMLHTTPREQUEST';
     }
 }
-/**
- *@todo: 判断是否为命令行模式
- */
+// 判断是否为命令行模式
 if(!function_exists('is_cli')) {
-    function is_cli()
-    {
+    function is_cli(){
         return (PHP_SAPI === 'cli' OR defined('STDIN'));
     }
 }
 
 
 
+// 过滤js
+function filter_script($string_has_script){
+    return preg_replace("/<(script.*?)>(.*?)<(\/script.*?)>/si","", $string_has_script);
+}
+// 过滤style
+function filter_style($string_has_style){
+    return preg_replace("/<(style.*?)>(.*?)<(\/style.*?)>/si","", $string_has_style);
+}
+// 过滤iframe
+function filter_iframe($string_has_iframe){
+    return preg_replace("/<(i?frame.*?)>(.*?)<(\/i?frame.*?)>/si","", $string_has_iframe);
+}
+// 清除html注释
+function clear_note($string_has_note){
+    return preg_replace("/<\!--.*?-->/si","", $string_has_note);
+}
+// 显示php、xml标签
+function filter_php_xml($str_has_php){
+    $str = str_replace("<?", "<_?", $str_has_php);
+    $str = str_replace("?>", "?_>", $str);
+    return $str;
+}
+// 一次性清除文章中的非法字符、标签
+function filter_article($string){
+    $string = filter_script($string);
+    $string = filter_style($string);
+    $string = filter_iframe($string);
+    $string = clear_note($string);
+    $string = filter_php_xml($string);
 
+    return $string;
+}
+
+
+// 过滤特殊字符
+function filter_key($key_array, $string){
+    foreach ($key_array as $value){
+        $string = str_replace($value, "", $string);
+    }
+    return [$string, $key_array];
+}
+
+
+// 验证Email
+function check_email($string){
+    if (!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $string)) {
+        $has = false;
+    }else{
+        $has = true;
+    }
+    return [$has, $string];
+}
+// 验证6-18位字以字母开头的符串中是否有字母、数字、下划线
+function check_login_name($string){
+    if(preg_match("/^[a-zA-Z]\w{5,17}$/", $string)) {
+        $has = true;
+    } else {
+        $has = false;
+    }
+    return [$has, $string];
+}
+// 验证手机号
+function check_phone($value){
+    if(preg_match("/^1[3456789]{1}\d{9}$/", $value)){
+        $has = true;
+    }else{
+        $has = false;
+    }
+    return [$has, $value];
+}
+// 验证身份证号
+function check_id($value){
+    if (!preg_match('/^\d{17}[0-9xX]$/', $value)) { //基本格式校验
+        $has = false;
+    }
+    $parsed = date_parse(substr($value, 6, 8));
+    if (!(isset($parsed['warning_count'])
+        && $parsed['warning_count'] == 0)) { //年月日位校验
+        $has = false;
+    }
+    $base = substr($value, 0, 17);
+    $factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
+    $tokens = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'];
+    $checkSum = 0;
+    for ($i=0; $i<17; $i++) {
+        $checkSum += intval(substr($base, $i, 1)) * $factor[$i];
+    }
+    $mod = $checkSum % 11;
+    $token = $tokens[$mod];
+
+    $lastChar = strtoupper(substr($value, 17, 1));
+
+    $has = ($lastChar === $token);
+    return [$has, $value];
+}
+// 验证base64，并返回base64对应的[是否是base64编码，文件类型、文件格式]
+function check_base64($base64){
+    $key = ['-', '.']; // 防止application时匹配不出来后缀，需要先过滤特殊字符
+
+    if ($base64 == base64_encode(base64_decode($base64))){
+        $has = true;
+        $class = 'string';
+        $ext = [''];
+    }else if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64, $result)){
+        $has = true;
+        $class = 'image';
+        $ext = [$result[2]];
+    }else if (preg_match('/^(data:\s*text\/(\w+);base64,)/', $base64, $result)){
+        $has = true;
+        $class = 'text';
+        $ext = [$result[2]];
+    }else if (preg_match('/^(data:\s*audio\/(\w+);base64,)/', $base64, $result)){
+        $has = true;
+        $class = 'audio';
+        $ext = [$result[2]];
+    }else if (preg_match('/^(data:\s*video\/(\w+);base64,)/', $base64, $result)){
+        $has = true;
+        $class = 'audio';
+        $ext = [$result[2]];
+    }else if (preg_match('/^(data:\s*application\/(\w+);base64,)/', filter_key($key, $base64)[0], $result)){
+        $has = true;
+        $class = 'application';
+        $ext = [$result[2], $key];
+    }else{ // 未知
+        $has = false;
+        $class = '';
+        $ext = [''];
+    }
+
+    return [$has, $class, $ext];
+}
+
+
+// 返回404
+function back_404($txt = 'Route Error Or Page Not Found.'){
+    header('HTTP/1.1 404 Not Found');
+    header('Content-Type: text/html; charset=utf-8');
+
+    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">';
+    echo '<title>404-'.$txt.'</title>';
+    echo '<style>body{font-size: 18px;color: #555555;margin: 20px;background: #EEEEEE;font-weight: bold;text-align: center;letter-spacing: 2px;}</style>';
+
+    exit($txt);
+}

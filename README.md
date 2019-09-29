@@ -46,7 +46,7 @@
   + 403拒绝访问，
   + 301app需要升级；
 + msg：解释state的数字代表的意思；
-+ paging：分页【data_length所有数据的条数, limit每页最多数据条数, page当前第几页，】;
++ paging：分页【total所有数据的条数, limit每页最多数据条数, page当前第几页(offset、page)，】;
 + test_data：测试或查看返回的数据；
 + content：请求数据的内容；
 
@@ -75,11 +75,20 @@
 > 出现“127.0.0.1:6379> ”即代表成功。  
 
 ## 升级laravel版本
-> 在composer.json里面更改laravel版本
+> 在composer.json里面更改laravel版本  
 > 然后运行composer update命令即可升级版本  
 
 ##  
-## 2019-09-19  
+## 2019-09-19  ， 2019-09-28  
+##  
+
+
+
+
+
+
+
+
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 

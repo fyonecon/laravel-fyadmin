@@ -4,7 +4,7 @@
 
     <script src="http://cdnaliyun.oss-cn-hangzhou.aliyuncs.com/js/jquery-1.11.3.min.js"></script>
 
-    <input type="file" class="file-input-style" onchange="get_that_file(this, false, true);"/>
+    <input type="file" class="file-input-style" onchange="get_that_file(this, true, true);"/>
 
     <script>
 
@@ -71,7 +71,7 @@
                     }
 
                     if (post){
-                        upload_that_file(file_info, msg);
+                        //upload_that_file(file_info, msg);
                     }else {
                         console.log("跳过。");
                     }

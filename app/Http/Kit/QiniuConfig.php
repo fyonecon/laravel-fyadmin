@@ -28,8 +28,9 @@ class QiniuConfig{
      *
      * */
     public function qiniu_upload_api($file_path, $file_name){
+        $req = $_REQUEST?$_REQUEST:1; // 不管$_REQUEST是否有值，都直接提交，因为参数是new传过来的，如果不是，则改0
 
-        if($_REQUEST){
+        if($req){
 
             $accessKey      = config_qiniu()['accessKey']; // 请替换成你自己的
             $secretKey      = config_qiniu()['secretKey']; // 请替换成你自己的
@@ -59,14 +60,14 @@ class QiniuConfig{
                 $res = $uploadMgr->putFile($token, $key, $filePath); // 上传
 
                 if ($res){ //成功上传
-                    return array("state"=>1, "msg"=>"qiniu-upload is success", "file"=>$res[0]['key'], "file_info"=>$res, "qiniu_domain"=>$domain); // 返回文件名
+                    return array("state"=>1, "msg"=>"qiniu-upload is success", "file"=>$res[0]['key'], "file_info"=>$res, "qiniu_domain"=>$domain, "test_data"=>[$res, $_REQUEST]); // 返回文件名
                 }else{
-                    return array("state"=>0,"msg"=>"qiniu-upload is error");
+                    return array("state"=>0,"msg"=>"qiniu-upload is error","test_data"=> [$file_path, $file_name, $res]);
                 }
             }
 
         }else{
-            return array( "state"=>0, "msg"=>"REQUEST is error");
+            return array( "state"=>0, "msg"=>"REQUEST is null.", "test_data"=> [$_REQUEST]);
         }
     }
 

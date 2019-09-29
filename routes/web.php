@@ -16,17 +16,13 @@ Route::get('/', function () {
     $route = 'null';
     return redirect("/route/?route=$route&time=$time");
 });
-Route::get('/route', function ($txt = '路由不正确') {
-    header('HTTP/1.1 404 Not Found');
-    header('Content-Type: text/html; charset=utf-8');
-    echo '<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">';
-    echo '<title>404-'.$txt.'</title>';
-    echo '<style>body{font-size: 18px;color: #555555;margin: 20px;background: #EEEEEE;font-weight: bold;text-align: center;letter-spacing: 2px;}</style>';
-    exit($txt);
+Route::get('/route', function ($txt = '路由不正确。') {
+    back_404($txt);
 });
 
 Route::get('/init', 'Enhance\InitSys@init_sys'); // 系统初始化检测，检测环境必要参数
 Route::get('/common.js', 'Enhance\HtmlApi@common_js'); // 返回文件
+Route::get('/ip.js', 'Enhance\HtmlApi@ip_js');
 
 
 
@@ -57,6 +53,7 @@ Route::group(['prefix' => 'test'], function (){
 
     Route::match(['get', 'post'], '/get', 'Test\Test1@get');
     Route::match(['get', 'post'], '/test1', 'Test\Test1@test1');
+    Route::match(['get', 'post'], '/test', 'Test\Test2@test');
 });
 
 
@@ -116,3 +113,4 @@ Route::group(['prefix' => 'enhance'], function (){
 /*
  * 其他
  * */
+
