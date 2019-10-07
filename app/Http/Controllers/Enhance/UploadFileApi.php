@@ -28,7 +28,7 @@ class UploadFileApi extends OpenController {
 
         $upload_token = $request->input('upload_token');
 
-        $token_array = ["test2019", "test"];
+        $token_array = ["test2019", "laotie666"];
 
         // 检测白名单文件上传Token
         if (!in_array($upload_token, $token_array)){
@@ -37,7 +37,7 @@ class UploadFileApi extends OpenController {
                 'msg'=> 'upload_token验证失败，文件无法上传(UploadFile)',
                 'content'=> '',
             ];
-            //exit(json_encode($back, JSON_UNESCAPED_UNICODE));
+            exit(json_encode($back, JSON_UNESCAPED_UNICODE));
         }
 
         // 检测文件夹及文件夹权限

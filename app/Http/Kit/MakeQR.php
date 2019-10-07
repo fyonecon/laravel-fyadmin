@@ -16,7 +16,9 @@ if (is_file(path_info()['base_path'].'/vendor/phpqrcode/phpqrcode.php')){
 class MakeQR {
 
 
-    public function make_qr_img($_content, $_has_logo, $_logo_src ,$qiniu){
+    // 生成二维码图
+    // make_qr_img(二维码内容, 二维码是否要带上logo, logo的网址或者绝对地址, 是否开启七牛云)
+    public function make_qr_img($_content, $_has_logo, $_logo_src ,$qiniu_state){
         $qrcode = new \QRcode();
 
         $has_logo = $_has_logo; // 二维码中是否带有Logo
@@ -63,7 +65,7 @@ class MakeQR {
             $qrcode::png($content, $img_path, $level, $img_size, $img_margin);
         }
 
-        if ($qiniu == true){
+        if ($qiniu_state == true){
             // 上传到七牛
             $qiniu = new QiniuConfig();
             $res = $qiniu->qiniu_upload_api($img_path, $img_name);

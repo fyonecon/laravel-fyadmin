@@ -11,7 +11,8 @@ class MakeImg {
 
 
     // 将图片与图片合成（给背景图添加水印）
-    public function complex_img_img($_bg_img, $_add_img, $_parameter, $qiniu){
+    // complex_img_img(背景图, 添加图, 图片参数['x'=>x坐标px, 'y'=>y坐标px, 'opacity'=>透明度[0, 100]], 是否开启七牛云)
+    public function complex_img_img($_bg_img, $_add_img, $_parameter, $qiniu_state){
 
         // $_parameter = ['x'=>20, 'y'=>20, 'opacity'=> 80];
 
@@ -65,7 +66,7 @@ class MakeImg {
         imagedestroy($dst);
         imagedestroy($src);
 
-        if ($qiniu == true){
+        if ($qiniu_state == true){
             // 上传到七牛
             $qiniu = new QiniuConfig();
             $res = $qiniu->qiniu_upload_api($img_path, $img_name);
@@ -95,7 +96,8 @@ class MakeImg {
 
 
     // 将图片与文字合成
-    public function complex_img_txt($_bg_img, $_content, $_parameter, $qiniu){
+    // complex_img_txt(背景图, 文本内容, 文字样式, 是否开启七牛云)
+    public function complex_img_txt($_bg_img, $_content, $_parameter, $qiniu_state){
 
         //$_parameter = ['red'=>255, 'green'=>255, 'blue'=>255, 'alpha'=>0, 'size'=>50, 'angle'=>0, 'x'=>100, 'y'=>70];
 
@@ -154,7 +156,7 @@ class MakeImg {
 
         imagedestroy($image);
 
-        if ($qiniu == true){
+        if ($qiniu_state == true){
             // 上传到七牛
             $qiniu = new QiniuConfig();
             $res = $qiniu->qiniu_upload_api($img_path, $img_name);

@@ -1,13 +1,14 @@
 
 ## laravel框架
 
-> 目前框架版本为laravel6.0.4  
+> 目前框架版本为laravel6.0.4
 + php > 7.1.3
 + Redis
 
 ## 文档
 
 + 文档在目录/view-admin/里面，备份也在/view-admin/目录里面
++ 或该篇框架增强的博客https://blog.csdn.net/weixin_41827162/article/details/101025556 
 
 ## laravel-fyadmin说明
 > 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义。

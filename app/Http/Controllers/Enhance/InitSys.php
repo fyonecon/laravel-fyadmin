@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 class InitSys Extends Controller{
 
+    //
     protected function init_sys(){
 
         $test = [
