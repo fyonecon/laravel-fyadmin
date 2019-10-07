@@ -51,6 +51,15 @@
 + test_data：测试或查看返回的数据；
 + content：请求数据的内容；
 
+## 控制器编写接口的参数规定：
+> 接口请求参数：
++ app_version：请求该接口的app版本(类似写法1.13)；
++ app_class：请求该接口的设备类型(小写：ios、android、web、wx)；
++ user_id：
++ user_token：
++ 其他1...；
++ 其他2...；
+
 ## laravel项目部署(cd到composer.json同目录)
 + 检查是否安装composer
 > composer --version
