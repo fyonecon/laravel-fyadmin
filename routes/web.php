@@ -43,6 +43,7 @@ Route::group(['prefix' => 'safe'], function (){
 
 /*
  * Test目录下的
+ * 路由访问例子：public/index.php/test/get
  * */
 Route::group(['prefix' => 'test'], function (){
     Route::match(['get', 'post'], '/', function () {

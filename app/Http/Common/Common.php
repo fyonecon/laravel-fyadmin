@@ -49,7 +49,6 @@ function config_debug_key(){
     return date('dmY');
 }
 
-
 // 获取重要目录的绝对路径
 function path_info(){
     $info = [
@@ -336,6 +335,20 @@ if(!function_exists('is_cli')) {
     function is_cli(){
         return (PHP_SAPI === 'cli' OR defined('STDIN'));
     }
+}
+
+// 判断是否是有效的url链接
+function is_url($_url){ // 耗时任务
+    $url = $_url;
+    $response = get_headers($url);
+    if(preg_match('/200/',$response[0])){
+        //var_dump($response[0]);
+        $back = true;
+    }else{
+        //var_dump('无效url资源！');
+        $back = false;
+    }
+    return $back;
 }
 
 
