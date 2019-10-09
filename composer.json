@@ -1,10 +1,11 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "The Laravel Framework. fyonecon Maintaining.",
     "keywords": [
         "framework",
-        "laravel"
+        "laravel",
+        "enhance laravel"
     ],
     "license": "MIT",
     "require": {

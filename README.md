@@ -9,6 +9,8 @@
 
 + 文档在目录/view-admin/里面，备份也在/view-admin/目录里面
 + 或该篇框架增强的博客https://blog.csdn.net/weixin_41827162/article/details/101025556 
++ Vendor库：https://github.com/fyonecon/laravel-vendor  
++ Code库：https://github.com/fyonecon/laravel-fyadmin
 
 ## laravel-fyadmin说明
 > 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义，最终实现：请求Api化+扩展模块化+分布积木化。在造轮子中不断吸收优秀的思想基因，并抛弃不思进取的思维尘埃。继承旧秩序，创造新秩序。
