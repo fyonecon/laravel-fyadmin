@@ -9,10 +9,10 @@ namespace App\Http\Controllers\Enhance;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class InitSys Extends Controller{
+final class InitSys Extends Controller{
 
     //
-    protected function init_sys(){
+    final function init_sys(){
 
         $test = [
             '七牛云接口'=> 'http://localhost/laravel60/public/index.php/enhance/save_url_img?img_url=https://www.ggvs.cn/2019-09-09_11-44-02_5d75ca82be144.jpeg&upload_token=test2019&debug_key=29092019',

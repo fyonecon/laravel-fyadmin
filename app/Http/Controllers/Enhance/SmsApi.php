@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Kit\Secret;
 use Exception;
 
-class SmsApi extends Controller{
+final class SmsApi extends Controller{
 
 
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 
-class WxSmsApi extends Controller{
+final class WxSmsApi extends Controller{
 
 
 

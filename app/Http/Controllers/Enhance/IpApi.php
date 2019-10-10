@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Http\Kit\IpInfo;
 
-class IpApi extends OpenController {
+final class IpApi extends OpenController {
 
-    public function __construct(Request $request){
+    final function __construct(Request $request){
         parent::__construct($request);
 
     }
@@ -24,7 +24,7 @@ class IpApi extends OpenController {
      * 获取用户IP接口
      * /public/index.php/enhance/get_that_ip
      * */
-    public function get_that_ip(){
+    final function get_that_ip(){
         $ip_info = new IpInfo();
         $ip = $ip_info->get_user_ip();
 

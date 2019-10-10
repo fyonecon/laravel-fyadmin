@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
-class UploadFileApi extends OpenController {
+final class UploadFileApi extends OpenController {
 
     /*
      * 预先执行，安全检测
@@ -82,7 +82,7 @@ class UploadFileApi extends OpenController {
      * post方法：接口：save_base64_img
      *           方法：前端传入正确base64图片数据流即可
      * */
-    public function save_base64_img(Request $request){
+    final function save_base64_img(Request $request){
         header('Access-Control-Allow-Origin:*');
         $base64 = $request->input('base64_img');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
@@ -180,7 +180,7 @@ class UploadFileApi extends OpenController {
      * post方法：接口：save_url_img
      *           方法：前端传入图片的网址地址即可
      */
-    public function save_url_img(Request $request) {
+    final function save_url_img(Request $request) {
         header('Access-Control-Allow-Origin:*');
 
         $img_url = $request->input('img_url');
@@ -277,7 +277,7 @@ class UploadFileApi extends OpenController {
      * 任意文件以base64数据流传过来，保存成文件
      * $file_info = [0, "5C6B46D1681F52C4E326E84E49A9B97F.jpg", "image", "jpeg", 1541855, "data:image/jpeg;base64,/9j/4xxx"]
      * */
-    public function upload_base64_file(Request $request){
+    final function upload_base64_file(Request $request){
         header('Access-Control-Allow-Origin:*');
 
         $file_info = $request->input('file_info');
@@ -447,7 +447,7 @@ class UploadFileApi extends OpenController {
             <input type="submit" name="submit" value="提交">
          </form>
      * */
-    public function upload_form_file(Request $request){
+    final function upload_form_file(Request $request){
         header('Access-Control-Allow-Origin:*');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
 

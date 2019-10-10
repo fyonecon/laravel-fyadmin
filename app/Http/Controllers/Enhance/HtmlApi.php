@@ -10,7 +10,7 @@ use Exception;
 use App\Http\Kit\IpInfo;
 use Illuminate\Http\Request;
 
-class HtmlApi extends Controller{
+final class HtmlApi extends Controller{
 
 
     final function ip_js(){

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 
-class Log extends Controller {
+final class Log extends Controller {
 
 
     protected $local_server_ip = '';
@@ -23,7 +23,7 @@ class Log extends Controller {
     /*
      * 本系统中请调用此函数
      * */
-    public function write_log($title, $data){
+    final function write_log($title, $data){
 
         // 检查文件夹
         $this->path = path_info()['storage_path']."/custom_log/";
@@ -53,7 +53,7 @@ class Log extends Controller {
      * 写日志接口
      * 往日志服务器上写日志
      * */
-    public function log(Request $request){
+    final function log(Request $request){
         header('Access-Control-Allow-Origin:*');
 
         $title = $request->input('title'); // 日志来源
