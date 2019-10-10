@@ -151,7 +151,7 @@ class AdminLogin extends OpenController {
 
             $state = 0;
             $msg = '请先登录..';
-            $content = [$user_login_name, $user_login_token];
+            $content = [$user_login_name, $user_login_token, 'input'=>$request->input(), 'post'=>is_post()];
 
             $back = [
                 'state'=>$state,

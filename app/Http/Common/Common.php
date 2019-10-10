@@ -2,7 +2,9 @@
 /**
  * 不需要封装的公共函数，公共参数配置
  * 框架任何文件都可调用
- * */
+ * @param $txt
+ * @return string
+ */
 
 
 function test_common($txt){
@@ -14,7 +16,6 @@ function config_wxweb_share(){
     $info = [
         'appid'=> 'wxa10039a58c872225',
         'appsecret'=> '36f2a2f470add51145edf3179171502b',
-        'http_host'=> '', //
     ];
     return $info;
 }
@@ -120,7 +121,11 @@ function debug_key(){
     return config_debug_key();
 }
 
-
+// 生成毫秒时间戳
+function get_millisecond() {
+    list($microsecond , $time) = explode(' ', microtime()); //' '中间是一个空格
+    return (float)sprintf('%.0f',(floatval($microsecond)+floatval($time))*1000);
+}
 // 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105010159
 function to_time($_time){
     return date('YmdHis', strtotime($_time));
@@ -338,7 +343,7 @@ if(!function_exists('is_cli')) {
 }
 
 // 判断是否是有效的url链接
-function is_url($_url){ // 耗时任务
+function is_real_url($_url){ // 耗时任务
     $url = $_url;
     $response = get_headers($url);
     if(preg_match('/200/',$response[0])){
@@ -351,6 +356,33 @@ function is_url($_url){ // 耗时任务
     return $back;
 }
 
+// 判断是否是url链接
+function is_url($_url){ // 耗时任务
+    $url = $_url;
+    $pattern="#(http|https)://(.*\.)?.*\..*#i";
+    if(preg_match($pattern, $url)){
+        $back = true;
+    }else{
+        $back = false;
+    }
+    return $back;
+}
+
+/*
+ * 判断字符串是否为 Json 格式
+ * @param  string  $data  Json 字符串
+ * @param  bool    $assoc 是否返回关联数组。默认返回对象
+ * @return array|bool|object 成功返回转换后的对象或数组，失败返回 false
+ */
+function is_json($data = '', $assoc = false) {
+    $data = json_decode($data, $assoc);
+    if (($data && is_object($data)) || (is_array($data) && !empty($data))) {
+        $back = true;
+    }else{
+        $back = false;
+    }
+    return $back;
+}
 
 
 // 过滤js
@@ -497,3 +529,42 @@ function back_404($txt = 'Route Error Or Page Not Found.'){
 
     exit($txt);
 }
+
+
+/*
+ * 利用exec实现非阻塞请求，提高请求10%-20%的容量
+ * 1. php.ini需要去除disable_functions=exec来开启可使用exec函数
+ * 2. 利用了“命令行+api+参数”的请求过程，最终返回api的结果
+ * 3. 注意大多数命令行win与linux的不同，混用可能会报错
+ *
+ * exec_non_blocking($api, 参数：键值对数组, 标记)
+ * */
+function exec_non_blocking($api, $data_array, $sign){
+
+    $sign = $sign?$sign:get_millisecond();
+    $data = '';
+
+    foreach ($data_array as $key=>$value){
+        $data = $data.$key.'='.$value.'&';
+    }
+
+    if (function_exists('exec')){
+        try{
+            exec("curl -d '$data' '$api'", $_out); // 参数、api都应该加引号
+            $out = $_out[0];
+            if (is_json($out)){
+                $back = json_to_array($out);
+            }else{
+                $back = $out;
+            }
+        }catch (Exception $error){
+            $back = $error;
+        }
+
+    }else{
+        $back = 'php中的exec()函数未开启，请在php.ini需要去除disable_functions=exec来开启可使用exec()函数。';
+    }
+
+    return ['exec_data'=>$back, 'sign'=>$sign, 'test_data'=>[$api, $data_array], 'curl_way'=>'post']; // 统一返回json或string
+}
+

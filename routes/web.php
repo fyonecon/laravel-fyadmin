@@ -108,6 +108,7 @@ Route::group(['prefix' => 'enhance'], function (){
     Route::match(['get', 'post'], '/upload_form_file', 'Enhance\UploadFileApi@upload_form_file'); // 上传文件form法
     Route::match(['get', 'post'], '/save_url_img', 'Enhance\UploadFileApi@save_url_img'); // 保存url地址的图片
     Route::match(['get', 'post'], '/save_base64_img', 'Enhance\UploadFileApi@save_base64_img'); // 保存base64格式的图片
+    Route::match(['get', 'post'], '/wx_web_share', 'Enhance\WxWebApi@wx_web_share'); // 微信网页分享
 });
 
 
