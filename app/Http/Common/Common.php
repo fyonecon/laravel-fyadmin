@@ -357,7 +357,7 @@ function is_real_url($_url){ // 耗时任务
 }
 
 // 判断是否是url链接
-function is_url($_url){ // 耗时任务
+function is_url($_url){
     $url = $_url;
     $pattern="#(http|https)://(.*\.)?.*\..*#i";
     if(preg_match($pattern, $url)){
