@@ -1,16 +1,27 @@
 
-## laravel框架
+## laravel框架功能增强
 
 > 目前框架版本为laravel6.0.4
-+ php > 7.1.3
-+ Redis
++ php > 7.1.3，推荐最新PHP版本
++ Redis > 5
++ exec()命令行
++ 适用于负载均衡服务集群
+
+## 联系我
++ 微信Wechat：fy66881159  
++ 博客Blog：https://blog.csdn.net/weixin_41827162  
++ GitHub：https://github.com/fyonecon  
 
 ## 文档
-
 + 文档在目录/view-admin/里面，备份也在/view-admin/目录里面
 + 或该篇框架增强的博客https://blog.csdn.net/weixin_41827162/article/details/101025556 
 + Vendor库：https://github.com/fyonecon/laravel-vendor  
 + Code库：https://github.com/fyonecon/laravel-fyadmin
+
+## 开发模式
+> Controller-Kit-SafeCheck
++ 抛弃了MVC
++ 服务于数据库、Api安全、前后端分离、负载均衡、统一日志记录、高速文件+高速数据
 
 ## laravel-fyadmin说明
 > 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义，最终实现：请求Api化+扩展模块化+分布积木化。在造轮子中不断吸收优秀的思想基因，并抛弃不思进取的思维尘埃。继承旧秩序，创造新秩序。
@@ -21,13 +32,14 @@
 + 脱离模板渲染，采用前后端分离的PHP后台管理系统的渲染
 + 微信网页授权、微信网页分享
 + 获取用户精准IP+城市
++ 生成二维码、读取二维码、合成海报图
 + ...
 
 ## 控制器目录说明
 
 + /Http/Controllers/Admin/ 后台管理系统的接口目录
 + /Http/Controllers/App/ 前台应用的接口目录
-+ /Http/Controllers/Play/ 系统对外开放、系统对接的接口目录
++ /Http/Controllers/Enhance/ 系统对外开放、系统对接的接口目录
 + /Http/Controllers/Test/ 测试专用控制器
 + ...
 + /Http/Kit/ 放自定义框架、插件的目录
@@ -91,7 +103,7 @@
 > 然后运行composer update命令即可升级版本  
 
 ##  
-## 2019-09-19  ， 2019-09-28  
+## 2019-09-19  ， 2019-09-28  ， 2019-10-14
 ##  
 
 
