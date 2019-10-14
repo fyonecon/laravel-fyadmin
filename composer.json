@@ -47,7 +47,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Http/Common/Common.php"
+            "app/Http/Common/Common.php",
+            "app/Http/Common/TestCommon.php"
         ]
     },
     "autoload-dev": {

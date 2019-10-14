@@ -22,6 +22,7 @@ class AdminSafeCheck extends Controller{
 
     /*
      * 预先执行，安全检测
+     * 继承该class需要运行__construct
      * */
     protected function __construct(Request $request){
         header('Access-Control-Allow-Origin:*');

@@ -12,6 +12,12 @@ use App\Http\Controllers\Enhance\Log;
 class Test1 extends AdminSafeCheck {
 
 
+    public function __construct(Request $request){
+        parent::__construct($request);
+
+    }
+
+
     public function get(Request $request){
         $user = $request->input("user"); // 这里接收参数比thinkphp里面接收参数的input()要提前生命参数
         $name = $request->input("name");
@@ -27,8 +33,8 @@ class Test1 extends AdminSafeCheck {
         return json_encode($back, JSON_UNESCAPED_UNICODE); // js接收TP返回来的是string，而Lvl返回object。
     }
 
-    // http://localhost/laravel58/public/index.php/test/test1?method=get
-    public function test1(){
+    // http://localhost/laravel58/public/index.php/test/test?method=get
+    public function test(){
 
         var_dump(path_info());
 
@@ -55,6 +61,36 @@ class Test1 extends AdminSafeCheck {
         var_dump(config_qiniu()['accessKey']);
 
     }
+
+
+    public function test1(){
+        echo 'test1';
+
+    }
+
+
+    public function test2(){
+        echo 'test2';
+
+    }
+
+    public function test3(){
+        echo 'test3';
+
+    }
+
+    public function test4(){
+        echo 'test4';
+
+    }
+
+    public function test5(){
+        echo 'test5';
+
+    }
+
+
+
 
 
 }

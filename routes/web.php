@@ -11,6 +11,10 @@
 |
 */
 
+
+/*
+ * 默认路由
+ * */
 Route::get('/', function () {
     $time = date('Y-m-d');
     $route = 'null';
@@ -23,7 +27,6 @@ Route::get('/route', function ($txt = '路由不正确。') {
 Route::get('/init', 'Enhance\InitSys@init_sys'); // 系统初始化检测，检测环境必要参数
 Route::get('/common.js', 'Enhance\HtmlApi@common_js'); // 返回文件
 Route::get('/ip.js', 'Enhance\HtmlApi@ip_js');
-
 
 
 
@@ -53,8 +56,12 @@ Route::group(['prefix' => 'test'], function (){
     }); // 默认
 
     Route::match(['get', 'post'], '/get', 'Test\Test1@get');
+    Route::match(['get', 'post'], '/test', 'Test\Test1@test');
     Route::match(['get', 'post'], '/test1', 'Test\Test1@test1');
-    Route::match(['get', 'post'], '/test', 'Test\Test2@test');
+    Route::match(['get', 'post'], '/test2', 'Test\Test1@test2');
+    Route::match(['get', 'post'], '/test3', 'Test\Test1@test3');
+    Route::match(['get', 'post'], '/test4', 'Test\Test1@test4');
+    Route::match(['get', 'post'], '/test5', 'Test\Test1@test5');
 });
 
 

@@ -197,31 +197,28 @@ function get_rand_string($len, $chars=null){
 // 二维，根据某个键的数值排序
 function order_key_array($array, $key, $order){
     if (!$array){return [];}
-    if (!$order){$order = 'desc';}
+    if (!$order){$order = 'asc';}
 
-    // 选择排序法
-    $temp = 0;
-    for($i = 0;$i < count($array) - 1;$i++){
-        $minVal = $array[$i][$key]; //假设$i就是最小值
-        $minValIndex = $i;
-        for($j = $i+1;$j < count($array);$j++){
-            if ($order == 'desc'){
-                if($minVal < $array[$j][$key]){ //从小到大排列
-                    $minVal = $array[$j][$key]; //找最大值
-                    $minValIndex = $j;
-                }
-            }else{
-                if($minVal > $array[$j][$key]){ //从小到大排列
-                    $minVal = $array[$j][$key]; //找最小值
-                    $minValIndex = $j;
-                }
+    // 冒泡法
+    // 默认从小到大
+    // 第一层可以理解为从数组中键为0开始循环到最后一个
+    for ($i = 0; $i < count($array); $i++) {
+        // 第二层为从$i+1的地方循环到数组最后
+        for ($j = $i + 1; $j < count($array); $j++) {
+            // 比较数组中两个相邻值的大小
+            if ($array[$i][$key] > $array[$j][$key]) {
+                $tem = $array[$i]; // 这里临时变量，存贮$i的值
+                $array[$i] = $array[$j]; // 第一次更换位置
+                $array[$j] = $tem; // 完成位置互换
             }
         }
-        $temp = $array[$i][$key];
-        $array[$i][$key] = $array[$minValIndex][$key];
-        $array[$minValIndex][$key] = $temp;
     }
-    $new_array = $array;
+
+    if ($order == 'desc'){ // 从大到小
+        $new_array = array_reverse($array);
+    }else{ // 从小到大
+        $new_array = $array;
+    }
 
     return $new_array;
 }
@@ -567,4 +564,30 @@ function exec_non_blocking($api, $data_array, $sign){
 
     return ['exec_data'=>$back, 'sign'=>$sign, 'test_data'=>[$api, $data_array], 'curl_way'=>'post']; // 统一返回json或string
 }
+
+/*
+ * 正则获取url参数，不区分?、#、&
+ * get_url_param(未转义的网址（必选）, 键（可选）)
+ * */
+function get_url_param($url, $key=''){
+    $result = [];
+    $mr = preg_match_all('/([?&#])(.+?)=([^?&#]*)/i', $url, $match); // 不区分?、#、&
+    if ($mr !== false) {
+        for ($i = 0; $i < $mr; $i++) {
+            $result[$match[2][$i]] = $match[3][$i];
+        }
+    }
+    if ($key){
+        try{
+            $value = $result[$key];
+        }catch (Exception $error){
+            $value = '';
+        }
+    }else{
+        $value = $result;
+    }
+
+    return $value;
+}
+
 
