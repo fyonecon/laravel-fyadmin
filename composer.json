@@ -48,6 +48,7 @@
         ],
         "files": [
             "app/Http/Common/Common.php",
+            "app/Http/Common/TraitCommon.php",
             "app/Http/Common/TestCommon.php"
         ]
     },

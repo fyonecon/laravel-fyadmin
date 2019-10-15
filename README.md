@@ -20,8 +20,9 @@
 
 ## 开发模式
 > Controller-Kit-SafeCheck
-+ 抛弃了MVC
++ 抛弃了MVC，理念意在代码功能对应接口，前、后端分离对应接口，这样就便多人升级功能维护功能开发功能
 + 服务于数据库、Api安全、前后端分离、负载均衡、统一日志记录、高速文件+高速数据
++ 带有部分反爬虫功能
 
 ## laravel-fyadmin说明
 > 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义，最终实现：请求Api化+扩展模块化+分布积木化。在造轮子中不断吸收优秀的思想基因，并抛弃不思进取的思维尘埃。继承旧秩序，创造新秩序。
@@ -39,21 +40,22 @@
 
 + /Http/Controllers/Admin/ 后台管理系统的接口目录
 + /Http/Controllers/App/ 前台应用的接口目录
-+ /Http/Controllers/Enhance/ 系统对外开放、系统对接的接口目录
++ /Http/Controllers/Enhance/ 系统对外开放、系统对接的接口目录，不能被继承
 + /Http/Controllers/Test/ 测试专用控制器
 + ...
 + /Http/Kit/ 放自定义框架、插件的目录
 + ...
-+ /Common/common.php 公用函数
++ /Common/Common.php 公用函数，可以直接调用
++ /Common/TraitCommon.php 需要使用use来调用，来使用公共函数，主要解决多继承问题
 + /Http/Controller/AdminSafeCheck.php 用于后台管理系统接口的安全验证控制器继承
 + /Http/Controller/AppSafeCheck.php 用于前台应用的接口的安全验证控制器继承
 + /Http/Controller/OpenSafeCheck.php 奔放的安全验证控制器继承
 + ...
-+ /storage/upload_file/ 文件上传目录，权限777
-+ /view-admin/ 后台管理系统前端代码目录
++ /storage/*目录*/ 各种文件上传目录，权限777，可以运行'chmod -R 777 storage'一次性777
++ /view-admin/ 后台管理系统前端代码目录，详细使用参见/view-admin/readme.md文件
 + ...
 
-## 接口返回：
+## 接口返回规范：
 + state接口返回的状态：
   + 1有数据，
   + 0无数据，
@@ -75,6 +77,7 @@
 + 其他2...；
 
 ## laravel项目部署(cd到composer.json同目录)
++ 将/文档与说明/里面的vendor文件直接解压在laravel-fyadmin/目录
 + 检查是否安装composer
 > composer --version
 + 更换composer镜像
@@ -82,6 +85,8 @@
 + 初始化composer
 > composer install
 + 有报错就解决一下报错，然后再次运行composer install，一般会报错1.文件引入的错误；2.vendor依赖的错误。
++ 运行composer update来检测或者今后检测包更新
+> composer update
 + storage目录和bootstrap目录777权限
 > 无报错就能运行项目了。
 
@@ -100,10 +105,12 @@
 
 ## 升级laravel版本
 > 在composer.json里面更改laravel版本  
-> 然后运行composer update命令即可升级版本  
+> 然后运行composer update命令即可升级版本或插件
+
+## 祝你又帅又有钱！  
 
 ##  
-## 2019-09-19  ， 2019-09-28  ， 2019-10-14
+##大更新： 2019-09-19  ， 2019-09-28  ， 2019-10-14
 ##  
 
 
