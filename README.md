@@ -3,8 +3,8 @@
 
 > 目前框架版本为laravel6.0.4
 + php > 7.1.3，推荐最新PHP版本
-+ Redis > 5
-+ exec()命令行
++ Redis需开启
++ exec()命令行函数需开启
 + 适用于负载均衡服务集群
 
 ## 联系我
@@ -13,16 +13,17 @@
 + GitHub：https://github.com/fyonecon  
 
 ## 文档
-+ 文档在目录/view-admin/里面，备份也在/view-admin/目录里面
++ 文档在目录/根目录/文档与说明/里面，备份也在/根目录/文档与说明/目录里面
 + 或该篇框架增强的博客https://blog.csdn.net/weixin_41827162/article/details/101025556 
 + Vendor库：https://github.com/fyonecon/laravel-vendor  
 + Code库：https://github.com/fyonecon/laravel-fyadmin
 
 ## 开发模式
 > Controller-Kit-SafeCheck
-+ 抛弃了MVC，理念意在代码功能对应接口，前、后端分离对应接口，这样就便多人升级功能维护功能开发功能
++ 抛弃了MVC，理念意在代码功能对应接口，前、后端分离对应接口。这样就便多人升级功能维护功能开发功能，方便调试接口
 + 服务于数据库、Api安全、前后端分离、负载均衡、统一日志记录、高速文件+高速数据
 + 带有部分反爬虫功能
++ 请求生命周期：route--middleware--SafeCheck验证(--返回json)--Controller处理数据--返回json
 
 ## laravel-fyadmin说明
 > 将以前TP5.1中的控制器结构设置移植到laravel中，所以，某些拦截的写法偏向自定义，最终实现：请求Api化+扩展模块化+分布积木化。在造轮子中不断吸收优秀的思想基因，并抛弃不思进取的思维尘埃。继承旧秩序，创造新秩序。
@@ -57,10 +58,11 @@
 
 ## 接口返回规范：
 + state接口返回的状态：
-  + 1有数据，
   + 0无数据，
+  + 1有数据，
   + 2接口数据请求条件不足或未知错误，
   + 403拒绝访问，
+  + 302需要重新授权并登录（可能是user_token过期、反爬虫机制报警、防破解机制报警等）  
   + 301app需要升级；
 + msg：解释state的数字代表的意思；
 + paging：分页【total所有数据的条数, limit每页最多数据条数, page当前第几页(offset、page)，】;
@@ -107,7 +109,7 @@
 > 在composer.json里面更改laravel版本  
 > 然后运行composer update命令即可升级版本或插件
 
-## 祝你又帅又有钱！  
+# 祝你又帅又有钱！  
 
 ##  
 ## 大更新： 2019-09-19  ， 2019-09-28  ， 2019-10-14

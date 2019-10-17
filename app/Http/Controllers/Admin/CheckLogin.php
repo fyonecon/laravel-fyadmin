@@ -90,8 +90,8 @@ class CheckLogin extends Controller{
                     }else{
 
                         if ($i == count($token_array)-1){
-                            $state = 0;
-                            $msg = '用户Token可能已经更新，请重新登录';
+                            $state = 302;
+                            $msg = '用户Token可能已经更新，请重新登录（授权）';
                             $content = '';
 
                         }
