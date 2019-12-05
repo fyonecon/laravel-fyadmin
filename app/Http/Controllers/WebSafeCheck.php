@@ -58,7 +58,7 @@ class WebSafeCheck extends Controller{
                 $user_token = $request->input('user_token');
                 $app_class = $request->input('app_class');
 
-                if ($user_token == 'zhuanzhuanle'){ // 白名单token
+                if ($user_token == 'test'){ // 白名单token
 
                 }else{
 
