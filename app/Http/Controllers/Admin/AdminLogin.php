@@ -146,6 +146,7 @@ class AdminLogin extends OpenController {
 
         if ($user_login_token || $user_login_name){
             $check_login = new CheckLogin();
+
             $back = $check_login->safe_check($user_login_name, $user_login_token);
         }else {
 

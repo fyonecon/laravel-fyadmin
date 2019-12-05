@@ -1,7 +1,7 @@
 <?php
 
-include './common/config.php';
-
+$head_path = dirname(dirname(__FILE__)); // 项目index的根目录
+include $head_path.'/common/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -14,11 +14,11 @@ include './common/config.php';
     <title><?=isset($title)?$title:'未知' ?>-<?=$sys_name?></title>
     <link rel="shortcut icon" href="<?=$file_url?>static/favicon.ico" type="image/x-icon"/>
 
-    <meta name="robots" content=""/>
+    <meta name="robots" content="noindex, nofollow"/>
     <meta name="google" content="notranslate"/>
-    <meta name="keywords" content=""/>
-    <meta name="description" content=""/>
-    <meta name="author" content="fyonecon" />
+    <meta name="keywords" content="长沙文都、湖南文都"/>
+    <meta name="description" content="长沙文都考研后台管理系统"/>
+    <meta name="author" content="github.com/fyonecon" />
 
     <link href="<?=$file_url?>static/css/common.css?<?=$head_time?>" rel="stylesheet"/>
     <link href="<?=$file_url?>static/css/all.css?<?=$head_time?>" rel="stylesheet"/>
@@ -50,6 +50,7 @@ include './common/config.php';
         * */
         const web_url = "<?=$web_url?>";
         const file_url = "<?=$file_url?>";
+        const img_url = "<?=$img_url?>";
         const api_url = "<?=$api_url?>";
         const app_class = "<?=$app_class?>";
 
@@ -58,7 +59,7 @@ include './common/config.php';
 <body class="<?=$head_time?> body">
 
 <?php
-    include './common/nav.php';
+include  $head_path.'/common/nav.php';
 ?>
 
 <div class="loading-div flex-center select-none" id="loading-div">

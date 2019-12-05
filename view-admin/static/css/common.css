@@ -6,7 +6,6 @@
 
 body{
     margin: 0;
-    background: #eeeeee !important;
 }
 
 @media only screen and (max-width: 300px) {
@@ -152,19 +151,15 @@ body{
     user-select: none;
 }
 .click:active{
-    opacity: 0.8;
-    color: lightcoral !important;
+    opacity: 0.6;
 }
 .click:hover{
-    opacity: 0.9;
-    color: grey !important;
+    opacity: 0.8;
 }
 
 .hover:hover{
     opacity: 0.8;
-    color: grey !important;
     cursor: pointer;
-    color: gray;
 }
 .select-none{ /*禁止复制*/
     -moz-user-select: none;

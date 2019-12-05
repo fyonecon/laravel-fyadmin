@@ -1,6 +1,7 @@
 <?php
 $title = '主页(统计)'; // 模块标题，每个页面自定义
-include './common/head.php';
+$page_path = dirname(__FILE__); // 项目index的根目录
+include $page_path.'/common/head.php';
 ?>
 
 
@@ -52,6 +53,21 @@ include './common/head.php';
 <!-- end-div -->
 
 
+<script>
+
+
+    function test1() {
+
+        let string = "aaskadaknkkmdamlmdq12819sjansjk";
+        let bad_string = "m";
+        let nice_string = "888";
+
+        console_log(replace_string(string, bad_string, nice_string));
+
+    }
+
+
+</script>
 
 
 
@@ -59,7 +75,7 @@ include './common/head.php';
 
     // 页面数据入口，登录用户的token验证通过后才会执行此函数
     function page_data_init(){
-
+        test1();
 
 
     }
@@ -68,6 +84,6 @@ include './common/head.php';
 
 
 <?php
-include './common/foot.php';
+include $page_path.'/common/foot.php';
 ?>
 

@@ -23,13 +23,19 @@ class AdminUser extends AdminSafeCheck{
     public function add_user(Request $request){
 
         $father_user_id = $request->input('father_user_id');
-        $user_level = $request->input('user_level');
+        $user_level = $request->input('user_level')*1;
         $user_name = $request->input('user_name');
         $user_login_name = $request->input('user_login_name');
         $user_login_pwd = $request->input('user_login_pwd');
         $user_remark = $request->input('user_remark');
 
         $create_time = to_time(date('YmdHis'));
+
+        if ($user_level<1){
+            $user_level = 3;
+        }else if ($user_level >3){
+            $user_level = 3;
+        }
 
         // 检测用户登录名是否已经存在
         $has = $this->has_user_login_pwd($user_login_name);
@@ -90,8 +96,10 @@ class AdminUser extends AdminSafeCheck{
         $user_id = $request->input('user_id');
         $page = $request->input('page');
         if (!$page){
-            $page = 0;
+            $page=1;
         }
+        $page = $page-1;
+        $limit = page_limit();
 
         if ($user_id === 'all'){
 
@@ -99,8 +107,8 @@ class AdminUser extends AdminSafeCheck{
                 ->where('user_state', 1)
                 ->whereIn('user_level', [2, 3])
                 ->orderBy('user_id' ,'desc')
-                ->limit(page_limit())
-                ->offset($page)
+                ->limit($limit)
+                ->offset($page*$limit)
                 ->select('user_id', 'user_name', 'user_login_name', 'user_remark', 'create_time', 'update_time', 'father_user_id')
                 ->get();
 
@@ -139,8 +147,8 @@ class AdminUser extends AdminSafeCheck{
             'msg'=>$msg,
             'paging'=> [
                 'total'=>$total,
-                'limit'=>page_limit(),
-                'page'=>$page,
+                'limit'=>$limit,
+                'page'=>$page+1,
             ],
             'content'=>$content,
         ];
@@ -272,6 +280,7 @@ class AdminUser extends AdminSafeCheck{
         if (!$page){
             $page = 1;
         }
+        $limit = page_limit();
 
         if ($user_id === 'all'){
 
@@ -317,7 +326,7 @@ class AdminUser extends AdminSafeCheck{
             'msg'=>$msg,
             'paging'=> [
                 'total'=>$total,
-                'limit'=>page_limit(),
+                'limit'=>$limit,
                 'page'=>$page,
             ],
             'content'=>$content,

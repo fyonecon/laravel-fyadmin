@@ -1,6 +1,7 @@
 <?php
 $title = 'example'; // 模块标题，每个页面自定义
-include './common/head.php';
+$page_path = dirname(__FILE__); // 项目index的根目录
+include $page_path.'/common/head.php';
 ?>
 
 
@@ -30,6 +31,6 @@ include './common/head.php';
 
 
 <?php
-include './common/foot.php';
+include $page_path.'/common/foot.php';
 ?>
 

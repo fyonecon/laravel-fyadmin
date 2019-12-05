@@ -6,12 +6,12 @@ body, html{
 }
 
 .view-div{
-    min-height: 600px;
-    min-width: 1100px; /*最小版宽*/
+    min-height: 800px;
+    min-width: 1200px; /*最小版宽*/
     width: 100%;
 }
 .view-nav{
-    min-width: 1100px;
+    min-width: 1200px;
     width: 100%;
 }
 
@@ -59,8 +59,9 @@ input[type="number"]{
 
 .page-nav{
     height: 60px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     width: 100%;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.8);
 }
 .page-nav-title{
     min-width: 60px;
@@ -70,7 +71,7 @@ input[type="number"]{
     font-size: 16px;
     letter-spacing: 1px;
     font-weight: 600;
-    color: red;
+    color: dodgerblue;
     overflow: hidden;
     float: left;
     padding-left: 10px;
@@ -86,7 +87,7 @@ input[type="number"]{
     font-size: 14px;
     letter-spacing: 1px;
     font-weight: 600;
-    color: yellowgreen;
+    color: dodgerblue;
     /*overflow: hidden;*/
     float: right;
     padding-left: 10px;
@@ -109,17 +110,17 @@ input[type="number"]{
     padding-right: 10px;
 }
 .nav-item:hover{
-    color: lightblue;
-    background: rgba(255, 255, 255, 0.1);
+    color: lightgreen;
+    background: rgba(0,0,0,0.3);
 }
 .nav-item-active{
-    color: yellowgreen;
-    background: rgba(255, 255, 255, 0.2);
+    color: lightskyblue;
+    background: rgba(0,0,0,0.2);
 }
 
 .page-nav-user:hover{
-    color: lightblue;
-    background: rgba(255, 255, 255, 0.1);
+    color: lightgreen;
+    background: rgba(0,0,0,0.2);
     cursor: pointer;
 }
 
@@ -134,7 +135,8 @@ input[type="number"]{
     height: 60px;
     background: rgba(0,0,0,0.7);
     width: 100%;
-    margin-top: 100px;
+    margin-top: 220px;
+    min-width: 1200px;
 }
 .foot-txt{
     font-size: 14px;
@@ -253,6 +255,7 @@ input[type="number"]{
 }
 .nav-list-item-style:hover{
     background: rgba(255,255,255,0.2);
+    color: lightgreen;
 }
 
 .transform-90{ /*带动画旋转90°*/

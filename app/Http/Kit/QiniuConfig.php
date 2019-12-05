@@ -60,9 +60,9 @@ class QiniuConfig{
                 $res = $uploadMgr->putFile($token, $key, $filePath); // 上传
 
                 if ($res){ //成功上传
-                    return array("state"=>1, "msg"=>"qiniu-upload is success", "file"=>$res[0]['key'], "file_info"=>$res, "qiniu_domain"=>$domain, "test_data"=>[$res, $_REQUEST]); // 返回文件名
+                    return array("state"=>1, "msg"=>"qiniu-upload is success", "file"=>$res[0]['key'], "file_info"=>$res, "qiniu_domain"=>$domain); // 返回文件名
                 }else{
-                    return array("state"=>0,"msg"=>"qiniu-upload is error","test_data"=> [$file_path, $file_name, $res]);
+                    return array("state"=>0,"msg"=>"qiniu-upload is error","test_data"=> [$file_path, $file_name, $res, $_REQUEST]);
                 }
             }
 

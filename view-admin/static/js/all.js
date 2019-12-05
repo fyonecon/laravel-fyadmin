@@ -16,7 +16,7 @@ function console_log(txt) {
             txt = "空txt";
         }
     }
-    log === true ? console.log(txt): "";
+    log === true ? console.log("%c"+txt, "color:DeepSkyBlue;font-size:13px;"): "";
 }
 
 // cookie前缀
@@ -82,8 +82,10 @@ function hasIllegalChar(str) {
 
 // 管理用户等级的功能显示
 function user_level(level) {
-
     $(".level-"+level+"-not-do").remove();
+    setTimeout(function () {
+        user_level(level);
+    }, 800);
 }
 
 // 执行页面登录后的页面样式渲染//权限渲染
@@ -110,71 +112,60 @@ function page_style_init(user_name, _level, login_level_name) {
                     }, 200);
 *
 * */
-function paginition(_limit, _total, _uri1, _uri2, class_append, class_only, word1, num1) {
-    console_log("分页已经启动");
-    $("."+class_only).remove();
 
-    var limit = _limit; // 一页显示多少条数据
-    var total = _total; // 数据总记录数
-    var uri = _uri1; // 主页面地址（带参数）
-    var now_page = num1; // 当前第几页
-    if (!now_page){now_page=1}
 
-    var first_page = 1; // 首页
-    var end_page = (total-total%limit)/limit+1; // 最后一页
-    var all_page = end_page; // 总共有多少页
+// 分页
+// paging(当前第几页, 每页最大多少条数据, 总共有多少条数据, 向那个class标签插入分页, 分页参数的键, 不含分页id的键的网址)
+function paging(now_page, limit, total, insert_div, page_key, uri) {
+    let href = uri;
+    now_page = now_page*1;
+    limit = limit*1;
+    total = total*1;
 
-    var before_page = 1; // 计算前一页
-    var after_page = now_page*1+1;
-
-    var div_total = '<span class="limit">共'+ _total +'条数据</span>';
-
-    var first_url = uri+"&"+ word1 +"=" + first_page + _uri2;
-    var first = '<a href="'+ first_url +'" class="first-a page-a"><span class="first-span">首页</span></a>';
-
-    var before_url = uri+"&"+ word1 +"=" + before_page + _uri2;
-    var before = '<a href="'+ before_url +'" class="before-a page-a"><span class="before-span">上页</span></a>';
-
-    var now_url = uri+"&"+ word1 +"=" + now_page + _uri2;
-    var now = '<a href="'+ now_url +'" class="now-a page-a"><span class="before-span">'+ now_page+ '/' + all_page +'</span></a>';
-
-    var array_url = "";
-    var array = '<a href="'+ array_url +'" class="before-a page-a"><span class="before-span">'+ 1 +'</span></a>';
-
-    var after_url = uri+"&"+ word1 +"=" + after_page + _uri2;
-    var after = '<a href="'+ after_url +'" class="after-a page-a"><span class="after-span">下页</span></a>';
-
-    var end_url = uri+"&"+ word1 +"=" + end_page + _uri2;
-    var end = '<a href="'+ end_url +'" class="end-a page-a"><span class="end-span">尾页</span></a>';
-
-    var div = '<div class="pagination-div '+ class_only +'">'+ div_total + first + before + now + after + end +'</div>'
-
-    //$("."+class_append).parent().parent().append(div);
-    $("."+class_append).html("").parent().append(div);
-
-    if (now_page <= 1){ // 前一页超范围
-        $("."+class_only).find(".before-a").addClass("hide");
-    }else{
-        before_page = now_page-1;
+    let page_num = 0;
+    if (limit === total){
+        page_num = Math.floor(total/limit); // 页数
+    }else {
+        page_num = Math.floor(total/limit)+1; // 页数
     }
 
-    if (now_page >= end_page){ // 后一页超范围
-        console_log("超范围");
-        $("."+class_only).find(".after-a").addClass("hide");
-        $("."+class_only).find(".end-a").addClass("hide");
-    }else{
-        after_page = now_page+1;
+    let that_page = now_page;
+    if (that_page>page_num){
+        that_page=page_num;
     }
 
-    if (end_page === 1){ // 只有一页
-        // $("."+class_only).find(".first-a").addClass("hide");
-        $("."+class_only).find(".after-a").addClass("hide");
-        $("."+class_only).find(".before-a").addClass("hide");
-        $("."+class_only).find(".end-a").addClass("hide");
-    }
+    let html = [];
 
-    // 初始化等级
-    user_level(login_level);
+    let first_href = href+"&"+page_key+"="+1;
+    let first_a = '<a class="paging-a first_a" href="'+first_href+'" target="_self">首页</a>';
+    let before_href = href+"&"+page_key+"="+(now_page-1);
+    let before_a = '<a class="paging-a before_a" href="'+before_href+'" target="_self">上一页</a>';
+    html.push(first_a);
+    html.push(before_a);
+
+    let auto_href = href+"&"+page_key+"="+now_page;
+    let a = '<a class="paging-a auto_a" href="'+auto_href+'" target="_self">'+that_page+'/'+page_num+'</a>';
+    html.push(a);
+
+    let next_href = href+"&"+page_key+"="+(now_page+1);
+    let next_a = '<a class="paging-a next_a" href="'+next_href+'" target="_self">下一页</a>';
+    let end_href = href+"&"+page_key+"="+page_num;
+    let end_a = '<a class="paging-a end_a" href="'+end_href+'" target="_self">尾页</a>';
+    html.push(next_a);
+    html.push(end_a);
+
+    let div = html.join("");
+    $("."+insert_div).html('<div class="paging-div"><span class="paging-total">共'+total+'条数据</span>'+div+'</div>');
+
+    setTimeout(function () {
+        if (that_page <= 1){
+            $(".before_a").remove();
+        }
+        if (that_page >= page_num){
+            $(".next_a").remove();
+        }
+    }, 200);
+
 }
 
 
@@ -278,7 +269,196 @@ function check_text_black_keyword(string, black_keyword_array, _class, call_func
 }
 
 
+function alert_excel() {
+    alert_txt("请保存Excel", 5000);
+}
+
+
+function cal_back_top() {
+    let window_height = window.innerHeight;
+    let scroll_height = $(window).scrollTop();
+    let load_height = scroll_height - window_height + 300;
+    // console_log([window_height, scroll_height, load_height]);
+    if (load_height > 0){ // 滑过一个屏幕距离
+        $(".back-top").removeClass("hide");
+    }else {
+        $(".back-top").addClass("hide");
+    }
+}
+$(document).on("click", ".back-top", function () {
+    $("html, body").animate({scrollTop: 0}, "fast");
+});
 
 
 
+/*
+* 处理上传图片
+*   <input type="file" class="article-cover" onchange="upload_img_n(this, 100)" accept="image/gif, image/jpg, image/png, image/jpeg, image/bmp, image/jpe" />
+    <div class="upload_img_div" id="img-preview-box-100">
+        <img class="img-preview-style img-n-100" data-img_name="" src="" alt="未上传图片" />
+    </div>
+* */
 
+function upload_img_n(obj, n) {
+    let files = obj.files;
+    let id = "img-preview-box-"+n;
+    let el = document.getElementById(id);
+
+    img_file_reader_n(el, files, n);
+}
+function img_file_reader_n(el, files, n) {
+    let img_class = "img-n-"+n;
+    for (let i = 0; i < files.length; i++) {
+        let img = document.createElement("img");
+        img.classList.add(img_class);
+        img.classList.add("img-preview-style");
+        img.classList.add("img-upload-style");
+        img.setAttribute("data-img_name", "");
+        el.innerHTML = "";
+        el.appendChild(img);
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let base64 = e.target.result;
+            img.src = base64;
+
+            upload_cover_img(base64, img_class, n); // 上传图片
+        };
+        reader.readAsDataURL(files[i])
+    }
+}
+function upload_cover_img(base64, _class){
+    alert_txt("正在上传图片..", "long");
+
+    if (!_class){
+        alert_txt("未指定图片对于class", 2000);
+        return;
+    }
+
+    // 先上传封面
+    $.ajax({
+        url: api_url+"app/save_base64_img",
+        type: "POST",
+        dataType: "json",
+        async: true,
+        data: { // 字典数据
+            login_name: login_name,
+            login_token: login_token,
+            app_class: app_class,
+            upload_token: 'laotie666',
+
+            base64_img: base64,
+        },
+        success: function(back, status){
+
+            // 数据转换为json
+            let data = "";
+            let text = "";
+            if(typeof back === "string"){
+                data = JSON.parse(back);
+                text = back;
+            } else {
+                data = back;
+                text = JSON.stringify(back);
+            }
+            console_log("类型：" + typeof back + "\n数据：" + text +"\n状态：" + status + "。");
+
+            // 解析json
+            if (data.state===0){
+                console_log(data.msg);
+                alert_txt("上传失败", 2500);
+
+                $("."+_class).attr("src", "");
+                $("."+_class).attr("data-img_name", "");
+                $("."+_class).attr("alt", "图片上传失败");
+            }else if (data.state===1) {
+                console_log(data.msg);
+
+                let img_src = data.content.img; // 默认取x3高画质压缩
+                let domain = data.content.qiniu_info.qiniu_domain[0]; // 七牛绑定的域名
+                console_log([img_src, domain]);
+                console_log("==单张图片上传成功，开始执行img的js来源替换==");
+
+                $("."+_class).attr("src", domain + img_src);
+                $("."+_class).attr("data-img_name", img_src);
+                $("."+_class).attr("alt", "图片地址404");
+
+                console_log("img_class="+_class);
+                console_log($("."+_class));
+
+                alert_txt("该图片上传成功", 1500);
+
+            }else if (data.state===2) {
+                console_log(data.msg);
+                alert_txt("图片格式错误，不是正确编码的base64图片", 2500);
+
+                $("."+_class).attr("src", "");
+                $("."+_class).attr("data-img_name", "");
+                $("."+_class).attr("alt", "图片上传失败");
+            }else {
+                alert_txt("未知错误", 2500);
+
+                $("."+_class).attr("src", "");
+                $("."+_class).attr("data-img_name", "");
+                $("."+_class).attr("alt", "图片上传失败");
+            }
+        },
+        error: function (xhr) {
+            console.log(xhr);
+            alert_txt("接口请求错误或者网络不通", 2500);
+        }
+    });
+
+}
+
+
+function replace_string(string, bad_value, nice_value) {
+    let reg = "/"+ bad_value +"/g";
+    let new_string = string.replace(eval(reg), nice_value);
+
+    return new_string;
+}
+
+
+function replace_img_domain(timer, domain, max, num) {
+    if (!domain){domain = "还没有设置主域名replace_img_domain(timer, domain)/"}
+    if (!max){max = 100;}
+    if (max>10000){max = 10000}
+    if (max<50){max=50}
+    if (!num){num=0;}
+    if (!timer){timer = 200;}
+    if (timer<90){timer = 90;}
+    if (timer > 2000){timer = 2000;}
+
+    let img = document.getElementsByTagName("img");
+    let len = img.length;
+    let has_string = "bkt.clouddn.com/";
+
+    for (let i=0; i<len; i++){
+        let that_src = img[i].getAttribute("src");
+
+        let has_eq = that_src.indexOf(has_string);
+        if (has_eq !== -1){ // 含有
+            let img_name = that_src.split("m/")[1];
+            let new_img = domain + "" +img_name;
+
+            img[i].classList.add("auto_replace_src");
+            img[i].setAttribute("src", new_img);
+
+        }else {
+            console.log("replace_img_domain()-跳过");
+        }
+
+    }
+
+    if (num < max){
+        setTimeout(function () {
+            num += 1;
+            replace_img_domain(timer, domain, max, num);
+        }, timer);
+    }else {
+        console.log("终止，num="+num);
+    }
+
+}
+
+// replace_img_domain(500, "//img.ggvs.cn/" );

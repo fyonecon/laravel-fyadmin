@@ -86,6 +86,9 @@ final class UploadFileApi extends OpenController {
         header('Access-Control-Allow-Origin:*');
         $base64 = $request->input('base64_img');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
+        if (!$x4){
+            $x4 = 'x4';
+        }
 
         if (!$base64){
             return array("status"=>0,"msg"=>"base64 is null", "content"=> []);
@@ -111,34 +114,48 @@ final class UploadFileApi extends OpenController {
             $file_name_x3 = $file_name.'_x3.'.$type;
             $file_name_x4 = $file_name.'_x4.'.$type;
 
-            $x4_path = $file_name.$file_name_x4; // 文件存放地址
+            $x4_path = $new_file.$file_name_x4; // 文件存放地址
 
             if (file_put_contents($x4_path, base64_decode(str_replace($result[1], '', $base64)))){ // 在服务器创建文件
 
                 // x1低画质，x2中画质，x3高画质，x4原图
-                $x1_path = $file_name.$file_name_x1;
+                $x1_path = $new_file.$file_name_x1;
                 $this->compressed_image($x4_path, $x1_path, 300, 70);
 
-                $x2_path = $file_name.$file_name_x2;
+                $x2_path = $new_file.$file_name_x2;
                 $this->compressed_image($x4_path, $x2_path, 450, 80);
 
-                $x3_path = $file_name.$file_name_x3;
+                $x3_path = $new_file.$file_name_x3;
                 $this->compressed_image($x4_path, $x3_path, 600, 90);
 
                 $qiniu = new QiniuConfig(); // 实例化七牛云
 
-                $res_x1 = $qiniu->qiniu_upload_api($x1_path, $file_name.'_x1');
-                $res_x2 = $qiniu->qiniu_upload_api($x2_path, $file_name.'_x2');
-                $res_x3 = $qiniu->qiniu_upload_api($x3_path, $file_name.'_x3');
-                if ($x4 == 'x4'){
-                    $res_x4 = $qiniu->qiniu_upload_api($x4_path, $file_name.'_x4');
-                }else{
-                    $res_x4 = ['x4'];
-                }
+                if ($type == 'gif' || $type == 'GIF'){ // gif图不可压缩
 
-                $file_name = [$file_name_x1, $file_name_x2, $file_name_x3, $file_name_x4];
-                $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
-                $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
+                    $res_x4 = $qiniu->qiniu_upload_api($x4_path, $file_name.'_x4');
+                    $qiniu_info = ['gif图不可压缩，返回原图', $res_x4];
+
+                    $img_info = $res_x4;
+                    $img = $file_name.'_x4.'.$type;
+                }else{
+
+                    $res_x1 = $qiniu->qiniu_upload_api($x1_path, $file_name.'_x1');
+                    $res_x2 = $qiniu->qiniu_upload_api($x2_path, $file_name.'_x2');
+                    $res_x3 = $qiniu->qiniu_upload_api($x3_path, $file_name.'_x3');
+                    if ($x4 == 'x4'){ // 是否开启原图x4上传文件到七牛云
+                        $res_x4 = $qiniu->qiniu_upload_api($x4_path, $file_name.'_x4');
+                    }else{
+                        $res_x4 = ['x4'];
+                    }
+
+                    $file_name = [$file_name_x1, $file_name_x2, $file_name_x3, $file_name_x4];
+                    $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
+                    $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
+
+                    $img_info = $res_x3;
+
+                    $img = $file_name_x3;
+                }
 
                 // 记录日志
                 $log = new Log();
@@ -146,7 +163,7 @@ final class UploadFileApi extends OpenController {
 
                 $state = 1;
                 $msg = "文件操作成功；x1低画质，x2中画质，x3高画质，x4原图；七牛云返回值情况请查看键qiniu_info。";
-                $content =  ["file_name"=>$file_name, "qiniu_info"=>$res_x3];
+                $content =  ["file_name"=>$file_name, "qiniu_info"=>$img_info, "img"=> $img];
 
             }else{
                 $state = 0;
@@ -185,6 +202,9 @@ final class UploadFileApi extends OpenController {
 
         $img_url = $request->input('img_url');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
+        if (!$x4){
+            $x4 = 'x4';
+        }
 
         if (trim($img_url) == '') {
             return array("status"=>0,"msg"=>"img_url is null", 'content'=> []);
@@ -282,6 +302,10 @@ final class UploadFileApi extends OpenController {
 
         $file_info = $request->input('file_info');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
+        if (!$x4){
+            $x4 = 'x4';
+        }
+
 
         if (!$file_info){
             return array("status"=>0,"msg"=>"file_info is null", 'content'=> [
@@ -450,6 +474,12 @@ final class UploadFileApi extends OpenController {
     final function upload_form_file(Request $request){
         header('Access-Control-Allow-Origin:*');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
+        if (!$x4){
+            $x4 = 'x4';
+        }
+
+
+        $close_qiniu = $request->input('close_qiniu');
 
         if(is_post()){
 
@@ -460,11 +490,11 @@ final class UploadFileApi extends OpenController {
                 $content = "";
             }else{//控制上传类型以及大小
                 $file_size = $_FILES["file"]["size"];
-                if($file_size < 2048*10000){ // 20M
+                if($file_size < 4096*10000){ // 40M
 
                     /*开始*/
                     $upload_path = path_info()['storage_path']."/upload_file/files/"; // 文件保存目录
-                    $type = array("mp3", "js", "css", "jpg", "jpeg", "png", "bmp", "ico", "gif", "mp4");//允许上传文件的类型
+                    $type = array("mp3", "js", "css", "jpg", "jpeg", "png", "bmp", "ico", "gif", "mp4", "pdf", "ppt", "pptx", "doc", "docx", "xls", "xlsx", "zip", "7z", "rar", "exe", "dmg");//允许上传文件的类型
 
                     $ext = strtolower($this->file_ext($_FILES['file']['name']));
                     if (!in_array($ext, $type)) {
@@ -528,6 +558,7 @@ final class UploadFileApi extends OpenController {
                                     $content =  ["file_name"=>$file_name,"file_size"=>$file_size, "qiniu_info"=>$res_x3];
 
                                 }else{ // 不压缩
+
                                     // 上传到七牛
                                     $qiniu = new QiniuConfig();
                                     $res = $qiniu->qiniu_upload_api($file, $filename);
@@ -554,7 +585,7 @@ final class UploadFileApi extends OpenController {
 
                 }else{
                     $state = 0;
-                    $msg = "文件过大，文件限制在20M内。";
+                    $msg = "文件过大，文件限制在40M内。";
                     $content = [
                         "文件类型"=>  $_FILES['file']['type'],
                         "文件大小"=> $_FILES['file']['size'],
@@ -625,6 +656,9 @@ final class UploadFileApi extends OpenController {
             $per = $max_width / $width;//计算比例
             $new_width = $width * $per;
             $new_height = $height * $per;
+        }else{
+            $new_width = $width;
+            $new_height = $height;
         }
 
         switch($type){

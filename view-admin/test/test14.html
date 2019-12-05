@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="show-imp-sub-1">距离<span class="countdown-year">2020</span>考研还有</div>
+<div class="show-imp-sub-2"><span class="countdown-num">555</span>天</div>
+<div class="show-imp-sub-3 countdown-txt">时间紧张而珍贵，把握现在才最重要，马上报名吧！</div>
+
+<script>
+    // 日期转时间戳，秒
+    function get_unix_time(date_str){
+        let str = date_str.replace(/-/g,'/');
+        let date =  new Date(str);
+        let time_str = date.getTime().toString();
+        let time = time_str.substr(0, 10); // 转为s
+
+        return time*1;
+    }
+    // 倒计时计算
+    function get_countdown_time(_end_time) { // "2019-12-29 23:59:59"
+        let end_time = get_unix_time(_end_time);
+        let now_time = Math.floor((new Date()).valueOf()/1000);
+
+        let last_time = end_time - now_time;
+
+        let one_day = 24*60*60;
+        let one_hour = 60*60;
+        let one_min = 60;
+        let one_second = 1;
+
+        let day = Math.floor(last_time/one_day);
+        let hour = Math.floor((last_time-(day*one_day))/one_hour);
+        let min = Math.floor((last_time-(day*one_day + hour*one_hour))/one_min);
+        let second = Math.floor(last_time - (day*one_day + hour*one_hour + min*one_min)/one_second);
+
+        return [day, hour, min, second];
+    }
+</script>
+
+<script>
+
+    function countdown() {
+        let time_info = get_countdown_time("2019-12-29 23:59:59"); // 生成倒计时
+
+        let day = time_info[0];
+        let day_txt = document.getElementsByClassName("countdown-num")[0];
+        if (day>0){
+            day_txt.innerHTML = day;
+        }else {
+            day_txt.innerHTML = "已完";
+        }
+
+        setTimeout(function () {
+            countdown();
+        }, 1000);
+    }
+
+    (function () {
+        countdown();
+
+    })();
+
+</script>
+
+
+</body>
+</html>

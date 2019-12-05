@@ -21,7 +21,7 @@ class CheckLogin extends Controller{
 
         $secret = new Secret();
 
-        try{ // token格式错误时
+        try{ // 验证token格式
             $old_token = $secret->decode($user_login_token);
             $old_time = split_token($old_token)[0]*1;
         }catch (Exception $e){
@@ -108,7 +108,6 @@ class CheckLogin extends Controller{
 
 
         }else{
-
             $state = 0;
             $msg = '请先登录';
             $content = '';
@@ -117,6 +116,7 @@ class CheckLogin extends Controller{
         $back = [
             'state'=>$state,
             'msg'=>$msg,
+            'login_href'=>'login.php?login=must',
             'content'=>$content,
         ];
 

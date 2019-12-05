@@ -1,7 +1,6 @@
 <?php
-
-include_once './common/config.php';
-
+$page_path = dirname(__FILE__); // 项目index的根目录
+include $page_path.'/common/config.php';
 $_time = date('Y-m-d');
 
 ?>
@@ -12,13 +11,13 @@ $_time = date('Y-m-d');
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>请登录-Demo系统</title>
-    <script src="static/js/jquery-1.11.3.min.js"></script>
-    <script src="static/js/common.js"></script>
-    <script src="static/js/md5.js"></script>
-    <script src="static/js/check.js"></script>
-    <style>
+    <title>请登录-<?=$sys_name?></title>
+    <script src="<?=$file_url?>static/js/jquery-1.11.3.min.js"></script>
+    <script src="<?=$file_url?>static/js/common.js"></script>
+    <script src="<?=$file_url?>static/js/md5.js"></script>
+    <script src="<?=$file_url?>static/js/check.js"></script>
 
+    <style>
         .body{
             margin: 0;
             background: #EEEEEE;
@@ -36,6 +35,7 @@ $_time = date('Y-m-d');
             margin: auto;
             background: white;
             box-shadow: 0 0 5px #5a6268;
+            border-radius: 3px;
         }
         .user-input{
             width: calc(100% - 14px);
@@ -50,21 +50,23 @@ $_time = date('Y-m-d');
             text-align: center;
             font-size: 24px;
             letter-spacing: 4px;
-            color: red;
+            color: dodgerblue;
             font-weight: 700;
             -moz-user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            overflow: hidden;
+            height: 36px;
         }
         .user-login-btn{
             padding: 7px 25px;
             color: white;
-            background: red;
+            background: dodgerblue;
             font-weight: 700;
             font-size: 16px;
             letter-spacing: 2px;
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             border-radius: 5px;
             cursor: pointer;
             -moz-user-select: none;
@@ -129,7 +131,7 @@ $_time = date('Y-m-d');
 
 <div class="user-login">
     <div class="user-input-item user-title">
-        请登录<span class="user-title-span">Demo系统<span class="user-login-time">（<?=$_time?>）</span></span>
+        请登录<span class="user-title-span"><?=$sys_name?><span class="user-login-time">（<?=$_time?>）</span></span>
     </div>
     <div class="user-input-item">
         <input class="user-login-name user-input" value="" placeholder="登录名" maxlength="20" type="text"/>
@@ -235,11 +237,12 @@ $_time = date('Y-m-d');
 
                     setTimeout(function () {
                         if (back_url){
+                            back_url = decodeURI(back_url);
                             href = back_url;
                         }
                         console.log(href);
                         window.location.replace(href);
-                    }, 1500);
+                    }, 1000);
 
                 }else if (res.state === 2){
                     alert_txt(res.msg, 2000);
@@ -260,9 +263,9 @@ $_time = date('Y-m-d');
         console.log("run-make_num");
 
         let num1= js_rand(0, 99);
-        let num2= js_rand(10, 99);
+        let num2= js_rand(1, 11);
 
-        let num0 = js_rand(1, 3);
+        let num0 = js_rand(1, 3); // 加减乘除
         let mark = "";
 
         switch (num0) {

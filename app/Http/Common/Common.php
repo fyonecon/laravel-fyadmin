@@ -13,8 +13,8 @@ function test_common($txt){
 // 配置微信网页分享
 function config_wxweb_share(){
     $info = [
-        'appid'=> 'wxa10039a58c872225',
-        'appsecret'=> '36f2a2f470add51145edf3179171502b',
+        'appid'=> 'wx25',
+        'appsecret'=> '3602b',
     ];
     return $info;
 }
@@ -25,9 +25,10 @@ function config_qiniu(){
     $info = [
         'accessKey'=> 'sjLe9UAn3b8pNAqZW5CiKmNhiQYguqDr7_0_Iv7Q',
         'secretKey'=> 'CXUZS1F55dI6DimtMFOKLziJ4v34Wijo7NOnzu25',
-        'domain'=> ['http:qiniu-test.meishid.cn/'], // 多域名卸载数组里即可
+        'domain'=> ['http://qiniu-test.meishid.cn/'], // 多域名卸载数组里即可
         'bucket'=> 'test', // bucket名字
     ];
+    
     return $info;
 }
 
@@ -46,7 +47,24 @@ function config_log(){
 
 // 配置调试key，方便调试环境
 function config_debug_key(){
-    return date('dmY');
+    return date('Ymd');
+}
+
+// 随机生成6位验证码，去除不好寓意的数字，比如4
+function make_sms_code(){
+    $s = [
+        [1, 2, 3, 5, 6, 7, 8, 9, 0], // 第一位数字，可为0
+        [1, 2, 3, 5, 6, 7, 8, 9, 0], // 第二位数字
+        [1, 2, 3, 5, 6, 7, 8, 9, 0], // 第三位数字
+        [1, 2, 3, 5, 6, 7, 8, 9, 0], // 第四位数字
+        [1, 2, 3, 5, 6, 7, 8, 9, 0],
+        [1, 2, 3, 5, 6, 7, 8, 9, 0],
+    ];
+    $code_number = '';
+    for ($i=0; $i<count($s); $i++){
+        $code_number .= (string)$s[$i][rand(0, (count($s[$i])-1))];
+    }
+    return $code_number;
 }
 
 // 获取重要目录的绝对路径
@@ -108,7 +126,7 @@ function array_to_json($array_data){
 
 // 密码加密算法，非对称
 function pwd_encode($string){
-    $salt = '-PwD2019_fy';
+    $salt = '-P9_fy';
     $encode = md5($string.$salt);
 
     return $encode;
@@ -128,6 +146,10 @@ function get_millisecond() {
 // 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105010159
 function to_time($_time){
     return date('YmdHis', strtotime($_time));
+}
+// 将时间2019-01-05转换成秒时间戳
+function time_to($_date){
+    return strtotime($_date);
 }
 // 将时间转换成2019-01-05
 function date_time($to_time){
@@ -176,7 +198,7 @@ function split_token($token){
 
 // 分页每页数据量
 function page_limit(){
-    return 30;
+    return 20;
 }
 
 
@@ -190,6 +212,48 @@ function get_rand_string($len, $chars=null){
         $str .= $chars[mt_rand(0, $lc)];
     }
     return $str;
+}
+
+
+// 二维数组根据自定义时间格式来替换数组中的时间
+function array_change_date($array, $key, $date_model=null){
+    if (empty($date_model)){
+        $date_model = 'Y-m-d';
+    }
+
+    for($i=0; $i<count($array); $i++){ // 替换键、值对
+        $_time = $array[$i][$key];
+        $new_value = date($date_model, strtotime($_time));
+        $array[$i][$key] = $new_value; // 替换新值
+    }
+
+    return $array;
+}
+
+// 替换二维数组中的手机号或其他字符串
+function array_hide_value($array, $key, $_start, $_len, $tag = null){
+
+    if (empty($tag)){
+        $tag = '*';
+    }
+
+    $start = $_start-1;
+    $len = $_len;
+
+    $replace_tag = '';
+    for ($t=0; $t<($_len); $t++){ // 生成连续占位符
+        $replace_tag .= $tag;
+    }
+
+    for($i=0; $i<count($array); $i++){ // 替换键、值对
+        $value = $array[$i][$key];
+        $replace = substr($value, $start, $len);
+        $new_value = str_replace($replace, $replace_tag, $value);
+
+        $array[$i][$key] = $new_value; // 替换新值
+    }
+
+    return $array;
 }
 
 
@@ -589,4 +653,52 @@ function get_url_param($url, $key=''){
     return $value;
 }
 
+/*
+ * 判断从数据库取出来的数据是否有数据
+ * */
+function true_res($res){
+    if ($res && count($res)>0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
+
+/*
+ * 抽奖算法
+ * 权重数组必须为：八个等级之和为100
+ * */
+function get_maybe($_v){
+    $res = rand(0, 99); // 按百分比
+    $num = -1; // 结果标号
+
+    $v = $_v;
+    // $v = [1, 2, 3, 5, 5, 24, 30, 30]; // 奖品权重
+
+    if (count($v) != 8){ // 等级必须是8个
+        $num = -1;
+    }else{
+        if ($res < $v[0] && $res >= 0){ // 一等奖 1%
+            $num = 0;
+        }else if ($res < $v[0]+$v[1]){ // 二等奖 2%
+            $num = 1;
+        } else if ($res < $v[0]+$v[1]+$v[2]){ // 三等奖 5%
+            $num = 2;
+        } else if ($res < $v[0]+$v[1]+$v[2]+$v[3]){ // 四等等奖 5%
+            $num = 3;
+        }else if ($res < $v[0]+$v[1]+$v[2]+$v[3]+$v[4]){ // 五等奖 5%
+            $num = 4;
+        }else if ($res < $v[0]+$v[1]+$v[2]+$v[3]+$v[4]+$v[5]){
+            $num = 5;
+        }else if ($res < $v[0]+$v[1]+$v[2]+$v[3]+$v[4]+$v[5]+$v[6]){
+            $num = 6;
+        }else if ($res < $v[0]+$v[1]+$v[2]+$v[3]+$v[4]+$v[5]+$v[6]+$v[7]){
+            $num = 7;
+        }else{ // 未知情况
+            $num = -1;
+        }
+    }
+
+    return $num;
+}

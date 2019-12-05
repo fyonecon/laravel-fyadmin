@@ -352,7 +352,7 @@ function js_typeof(input_data) {
 /*
  * 预览单个大图功能：直接引用：show_img(img_url, "", "", "hide")
  * 可以判断图片地址是空或者404。
- * 
+ *
  * img_url：图片地址或者图片base64编码
  * txt：提示语
  * refresh："refresh"  关闭图片预览时刷新，
@@ -467,7 +467,7 @@ function getThisUrlParam(url, key) { // 返回值
     if (result) {
         return decodeURIComponent(result[2]); // 转义还原参数
     } else {
-        return null; // 没有匹配的键即返回null
+        return ""; // 没有匹配的键
     }
 
 }

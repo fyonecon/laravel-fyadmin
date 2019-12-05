@@ -1,6 +1,7 @@
 <?php
 $title = '管理管理员'; // 模块标题，每个页面自定义
-include './common/head.php';
+$page_path = dirname(__FILE__); // 项目index的根目录
+include $page_path.'/common/head.php';
 ?>
 
 
@@ -18,12 +19,12 @@ include './common/head.php';
     <div class="user-list-tab-div">
         <div class="float-left">
             <div class="tab-item select-none tab-item-active">用户列表</div>
-            <div class="tab-item select-none">管理员列表</div>
+            <div class="tab-item select-none level-n level-2-not-do level-3-not-do">管理员列表</div>
         </div>
 
         <div class="float-right">
-            <button class="btn level-n level-2-not-do btn-right btn-success btn-sm add-user-info" href="#" role="button">新增用户</button>
-            <button class="btn level-n level-2-not-do btn-right btn-success btn-sm add-admin-info" href="#" role="button" style="cursor: no-drop;" onclick="alert_txt('不可操作。', 3000);">新增管理员</button>
+            <button class="btn  level-n level-2-not-do level-3-not-do btn-right btn-success btn-sm add-user-info" href="#" role="button">新增用户</button>
+            <button class="btn  level-n level-2-not-do level-3-not-do btn-right btn-success btn-sm add-admin-info" href="#" role="button" style="cursor: no-drop;" onclick="alert_txt('不可操作。', 3000);">新增管理员</button>
         </div>
 
         <div class="clear"></div>
@@ -63,13 +64,13 @@ include './common/head.php';
 
                 </tbody>
             </table>
-            <div class="navigation-div"></div>
+            <div class="navigation-div-1"></div>
         </div>
 
     </div>
 
     <!--管理员列表-->
-    <div class="user-list-div tab-div hide level-n level-2-not-do">
+    <div class="user-list-div tab-div hide  level-n level-2-not-do level-3-not-do">
 
         <div class="list">
             <table class="table table-striped">
@@ -105,7 +106,7 @@ include './common/head.php';
 
     </div>
 
-    <!--填写信息-->
+    <!--开始-填写信息-->
     <div class="user-info-div fixed-div-box hide level-n level-2-not-do">
         <div class="fixed-div-nav">
             <div class="fixed-div-title">新增用户</div>
@@ -139,6 +140,16 @@ include './common/head.php';
                 <div class="clear"></div>
             </div>
             <!---->
+            <div class="input-div level-n level-2-not-do level-3-not-do">
+                <div class="input-title">用户等级</div>
+                <div class="important-tip">*</div>
+                <select class="select-user_level">
+                    <option value="2">普通管理员</option>
+                    <option value="3" selected="selected">游客管理员</option>
+                </select>
+                <div class="clear"></div>
+            </div>
+            <!---->
             <div class="input-div">
                 <div class="input-title">备注</div>
                 <div class="important-tip tip-hide">*</div>
@@ -148,15 +159,14 @@ include './common/head.php';
             </div>
 
 
-            <div class="fixed-btn-div">
+            <div class="fixed-btn-div level-n level-2-not-do level-3-not-do">
                 <div class="btn add-user-btn btn-primary">新增用户</div>
                 <div class="btn edit-user-btn btn-info hide" data-user_id="">修改用户信息</div>
             </div>
         </div>
 
-
-
     </div>
+    <!--结束-填写信息-->
 
     <div class="div-bg hide"></div>
 
@@ -277,6 +287,11 @@ include './common/head.php';
 
     // 删除用户
     function del_user(user_id) {
+        alert_txt("正在删除..", "long");
+        if (!user_id){
+            alert_txt("参数不完整。", 2000);
+            return;
+        }
 
         /*请求数据*/
         $.ajax({
@@ -344,21 +359,22 @@ include './common/head.php';
             success: function(back, status){
 
                 // 数据转换为json
-                var datas = data = "";
+                let data = "";
+                let text = "";
                 if(typeof back === "string"){
-                    datas = JSON.parse(back);
-                    data = back;
+                    data = JSON.parse(back);
+                    text = back;
                 } else {
-                    datas = back;
-                    data = JSON.stringify(back)
+                    data = back;
+                    text = JSON.stringify(back);
                 }
-                console_log("类型：" + typeof back + "。\n数据：" + data +"。\n状态：" + status + "。");
+                console_log("类型：" + typeof back + "\n数据：" + text +"\n状态：" + status + "。");
 
                 // 解析json
-                if (datas.state===0){
-                    alert_txt(datas.msg, 2000);
-                }else if (datas.state===1) {
-                    console_log(datas.msg);
+                if (data.state===0){
+                    alert_txt(data.msg, 2000);
+                }else if (data.state===1) {
+                    console_log(data.msg);
 
 
                     var user_id = 0;
@@ -371,8 +387,8 @@ include './common/head.php';
 
                     $(".list-user-tbody").html("");
 
-                    for (let i=0; i<datas.content.length; i++){
-                        var info = datas.content[i];
+                    for (let i=0; i<data.content.length; i++){
+                        var info = data.content[i];
 
                         user_id = info.user_id;
                         user_name = info.user_name;
@@ -390,8 +406,8 @@ include './common/head.php';
                             '<td class="father_user_id" data-father_user_id='+ father_user_id +'>'+ father_user_id +'</td>' +
                             '<td class="td-user_remark">'+ user_remark +'</td>' +
                             '<td class="">' +
-                            '    <span class="list-operation-span select-none bg-blue btn-edit_user">修改</span>' +
-                            '    <span class="list-operation-span select-none bg-red btn-del_user">双击删除</span>' +
+                            '    <span class="list-operation-span select-none bg-blue btn-edit_user level-n level-2-not-do level-3-not-do">修改</span>' +
+                            '    <span class="list-operation-span select-none bg-red btn-del_user level-n level-2-not-do level-3-not-do">双击删除</span>' +
                             '</td>' +
                             '</tr>';
 
@@ -399,17 +415,15 @@ include './common/head.php';
 
                     }
 
-
                     // 处理分页
-                    var page = datas.paging.page;
-                    var limit = datas.paging.limit;
-                    var count = datas.paging.data_count;
-                    var tab = getThisUrlParam("", "tab");
-                    tab = tab?tab:0;
-                    var url = web_url+"user.php?nav=user#tab="+tab;
+                    let now_page = data.paging.page;
+                    let limit = data.paging.limit;
+                    let total = data.paging.total;
+                    let url = web_url+"admin_user.php?nav=sys_config";
+                    console_log([now_page, limit, total, url]);
                     setTimeout(function () {
-                        paginition(limit, count, url, "navigation-div", "navigation-page", "page_user", page)
-                    }, 200);
+                        paging(now_page, limit, total, "navigation-div-1", "page_user", url);
+                    }, 100);
 
                 }
             },
@@ -443,21 +457,22 @@ include './common/head.php';
             success: function(back, status){
 
                 // 数据转换为json
-                var datas = data = "";
+                let data = "";
+                let text = "";
                 if(typeof back === "string"){
-                    datas = JSON.parse(back);
-                    data = back;
+                    data = JSON.parse(back);
+                    text = back;
                 } else {
-                    datas = back;
-                    data = JSON.stringify(back)
+                    data = back;
+                    text = JSON.stringify(back);
                 }
-                console_log("类型：" + typeof back + "。\n数据：" + data +"。\n状态：" + status + "。");
+                console_log("类型：" + typeof back + "\n数据：" + text +"\n状态：" + status + "。");
 
                 // 解析json
-                if (datas.state===0){
-                    alert_txt(datas.msg, 2000);
-                }else if (datas.state===1) {
-                    console_log(datas.msg);
+                if (data.state===0){
+                    alert_txt(data.msg, 2000);
+                }else if (data.state===1) {
+                    console_log(data.msg);
 
                     var user_id = 0;
                     var user_name = "";
@@ -469,8 +484,8 @@ include './common/head.php';
 
                     $(".list-admin-tbody").html("");
 
-                    for (let i=0; i<datas.content.length; i++){
-                        var info = datas.content[i];
+                    for (let i=0; i<data.content.length; i++){
+                        var info = data.content[i];
 
                         user_id = info.user_id;
                         user_name = info.user_name;
@@ -521,6 +536,7 @@ include './common/head.php';
         $(".input-user_login_pwd").val("");
         $(".input-user_remark").val("");
 
+        refresh_page(100);
     }
 
     // 开启窗口
@@ -552,7 +568,10 @@ include './common/head.php';
             alert_txt("正在提交..", "long");
 
             var father_user_id = login_id;
-            var user_level = 2;
+            var user_level = $(".select-user_level").val()*1;
+            if (!user_level){
+                user_level=2;
+            }
             var user_name = $(".input-user_name").val().trim();
             var user_login_name = $(".input-user_login_name").val().trim();
             var user_login_pwd = hex_md5($(".input-user_login_pwd").val().trim()); // 不管后台加不加密+
@@ -690,6 +709,6 @@ include './common/head.php';
 
 
 <?php
-include './common/foot.php';
+include $page_path.'/common/foot.php';
 ?>
 

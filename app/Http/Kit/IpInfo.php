@@ -56,10 +56,18 @@ class IpInfo{
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ips = explode (", ", $_SERVER['HTTP_X_FORWARDED_FOR']);
             if ($ip) { array_unshift($ips, $ip); $ip = FALSE; }
+
             for ($i = 0; $i < count($ips); $i++) {
-                if (!eregi ("^(10│172.16│192.168).", $ips[$i])) {
-                    $ip = $ips[$i];
+                if ($ips[$i] == '127.0.0.1' || $ips[$i] == 'localhost'){
+                    $ip = '127.0.0.1';
                     break;
+                }else{
+                    $w_ip = eregi("^(10│172.16│192.168).", $ips[$i]);
+
+                    if (!$w_ip) {
+                        $ip = $ips[$i];
+                        break;
+                    }
                 }
             }
         }

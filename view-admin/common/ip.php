@@ -3,8 +3,8 @@
 /*
  * 检测客户端运行页面情况
  * */
-
-include 'config.php';
+$ip_path = dirname(dirname(__FILE__)); // 项目index的根目录
+include $ip_path.'/common/config.php';
 
 $api = $api_url;
 $web = $web_url;
