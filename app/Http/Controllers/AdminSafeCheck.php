@@ -8,15 +8,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\BlockRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Enhance\Log;
-use App\Http\Controllers\BlockRequest;
 use App\Http\Kit\IpInfo;
 use App\Http\Kit\Secret;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Admin\CheckLogin;
+use App\Http\Controllers\Admin\AdminCheckLogin;
 
 class AdminSafeCheck extends Controller{
 
@@ -25,7 +25,6 @@ class AdminSafeCheck extends Controller{
      * 继承该class需要运行__construct
      * */
     protected function __construct(Request $request){
-        header('Access-Control-Allow-Origin:*');
 
         $post = $request->input();
         $debug_key = $request->input('debug_key');
@@ -43,15 +42,8 @@ class AdminSafeCheck extends Controller{
 
         }else{
 
-            if (!is_post()){
-                $back = [
-                    'state'=> 403,
-                    'msg'=> '此接口仅限POST，拒绝访问(Admin)',
-                    'content'=> '',
-                ];
-                $log_info = $log->write_log('AdminSafeCheck !is_post', $back);
-                exit(json_encode([$back, $log_info], JSON_UNESCAPED_UNICODE));
-            }else{
+            if (is_post() || is_options()){
+
                 $app_class = $post['app_class'];
                 $user_login_name = $post['login_name'];
                 $user_login_token = $post['login_token'];
@@ -61,7 +53,8 @@ class AdminSafeCheck extends Controller{
                 if (!in_array($app_class, $app_class_array)){ // 非白名单接口来源不可访问
                     $back = [
                         'state'=> 403,
-                        'msg'=> '接口来源不正确，拒绝访问(Admin)',
+                        'encode'=> 'utf-8',
+                        'msg'=> '接口来源不正确，拒绝访问(AdminSafe)',
                         'test_data'=> [
                             $app_class,
                             $user_login_name,
@@ -74,7 +67,7 @@ class AdminSafeCheck extends Controller{
                 }else{ // 正常
 
                     // 校验用户信息
-                    $check_login = new CheckLogin();
+                    $check_login = new AdminCheckLogin();
                     $user_safe = $check_login->safe_check($user_login_name, $user_login_token);
 
                     $user_safe_state = $user_safe['state'];
@@ -106,6 +99,7 @@ class AdminSafeCheck extends Controller{
                         // 抛出错误
                         $back = [
                             'state'=> $user_safe_state,
+                            'encode'=> 'utf-8',
                             'msg'=> $user_safe_msg,
                             'content'=> $user_safe,
                         ];
@@ -114,6 +108,17 @@ class AdminSafeCheck extends Controller{
                     }
 
                 }
+
+            }else{
+
+                $back = [
+                    'state'=> 403,
+                    'encode'=> 'utf-8',
+                    'msg'=> '此接口仅限POST或OPTIONS，拒绝访问(Admin)',
+                    'content'=> '',
+                ];
+                $log_info = $log->write_log('AdminSafeCheck !is_post', $back);
+                exit(json_encode([$back, $log_info], JSON_UNESCAPED_UNICODE));
 
             }
 

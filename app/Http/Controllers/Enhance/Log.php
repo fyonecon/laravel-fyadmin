@@ -8,13 +8,11 @@
 namespace App\Http\Controllers\Enhance;
 
 use App\Http\Controllers\Controller;
-use App\Http\Kit\CustomLog;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Http\Kit\CustomLog;
 use Exception;
 
-final class Log extends Controller {
-
+class Log extends Controller {
 
     protected $local_server_ip = '';
     protected $log_server_ip = '';
@@ -23,7 +21,7 @@ final class Log extends Controller {
     /*
      * 本系统中请调用此函数
      * */
-    final function write_log($title, $data){
+    public function write_log($title, $data){
 
         // 检查文件夹
         $this->path = path_info()['storage_path']."/custom_log/";
@@ -35,7 +33,7 @@ final class Log extends Controller {
         $this->local_server_ip = config_log()['local_server_ip']; // 本地/此服务器
         $this->log_server_ip = config_log()['log_server_ip']; // 日志服务器接口
 
-        $api = 'http://'.$this->log_server_ip.'/'.main_filename().'/public/index.php/enhance/log';
+        $api = 'http://'.$this->log_server_ip.'/'.main_filename().'/public/index.php/api/enhance/log';
         $array = [
             'title'=> json_encode($title, JSON_UNESCAPED_UNICODE),
             'data'=> json_encode($data, JSON_UNESCAPED_UNICODE),
@@ -53,8 +51,8 @@ final class Log extends Controller {
      * 写日志接口
      * 往日志服务器上写日志
      * */
-    final function log(Request $request){
-        header('Access-Control-Allow-Origin:*');
+    public function log(Request $request){
+        //header('Access-Control-Allow-Origin:*');
 
         $title = $request->input('title'); // 日志来源
         $data = $request->input('data'); // 日志内容

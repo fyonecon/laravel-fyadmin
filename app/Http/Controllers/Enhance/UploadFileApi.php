@@ -9,14 +9,14 @@
 
 namespace App\Http\Controllers\Enhance;
 
-use App\Http\Controllers\OpenController;
+use App\Http\Controllers\EnhanceSafeCheck;
 use App\Http\Kit\QiniuConfig;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Exception;
 
-final class UploadFileApi extends OpenController {
+final class UploadFileApi extends EnhanceSafeCheck {
 
     /*
      * 预先执行，安全检测
@@ -24,11 +24,11 @@ final class UploadFileApi extends OpenController {
     final function __construct(Request $request){
         parent::__construct($request);
 
-        header('Access-Control-Allow-Origin:*');
+        //header('Access-Control-Allow-Origin:*');
 
         $upload_token = $request->input('upload_token');
 
-        $token_array = ["test2019", "laotie666"];
+        $token_array = ["test", "666"];
 
         // 检测白名单文件上传Token
         if (!in_array($upload_token, $token_array)){
@@ -83,7 +83,7 @@ final class UploadFileApi extends OpenController {
      *           方法：前端传入正确base64图片数据流即可
      * */
     final function save_base64_img(Request $request){
-        header('Access-Control-Allow-Origin:*');
+        //header('Access-Control-Allow-Origin:*');
         $base64 = $request->input('base64_img');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
         if (!$x4){
@@ -198,7 +198,7 @@ final class UploadFileApi extends OpenController {
      *           方法：前端传入图片的网址地址即可
      */
     final function save_url_img(Request $request) {
-        header('Access-Control-Allow-Origin:*');
+        //header('Access-Control-Allow-Origin:*');
 
         $img_url = $request->input('img_url');
         $x4 = $request->input('x4'); // 是否上传原图到七牛云，$x4=x4则上传
@@ -207,78 +207,104 @@ final class UploadFileApi extends OpenController {
         }
 
         if (trim($img_url) == '') {
-            return array("status"=>0,"msg"=>"img_url is null", 'content'=> []);
-        }
-
-        $path = path_info()['storage_path']."/upload_file/url_img"; //文件绝对路径
-        $file = "/".date('Ymd', time())."/";
-
-        $pattern = substr(strrchr($img_url, '.'), 1); // 正则文件格式
-        $filename = $path.$file;
-        if(!file_exists($filename)){
-            //检查是否有该文件夹，如果没有就创建，并给予最高权限
-            mkdir($filename, 0755, true);
-        }
-
-        if (!$pattern){
             $state = 0;
-            $msg = "文件似乎无后缀。";
+            $msg = 'img_url is null';
             $content =  [];
-
-            // 记录日志
-            $log = new Log();
-            $log->write_log('save_url_img', [$img_url, $msg]);
         }else{
 
-            $img_name = $this->file_name_create($pattern); // 随机生成文件名
+            $path = path_info()['storage_path']."/upload_file/url_img"; //文件绝对路径
+            $file = "/".date('Ymd', time())."/";
 
-            $file_name_x1 = $img_name.'_x1.'.$pattern;
-            $file_name_x2 = $img_name.'_x2.'.$pattern;
-            $file_name_x3 = $img_name.'_x3.'.$pattern;
-            $file_name_x4 = $img_name.'_x4.'.$pattern;
-
-            $x4_path = $filename.$file_name_x4; // 文件存放地址
-
-            // 1. 下载并保存图片
-            $img = file_get_contents($img_url);
-            file_put_contents($x4_path, $img);
-
-            // 2. 压缩图片
-            // x1低画质，x2中画质，x3高画质，x4原图
-            $x1_path = $filename.$file_name_x1;
-            $this->compressed_image($x4_path, $x1_path, 300, 70);
-
-            $x2_path = $filename.$file_name_x2;
-            $this->compressed_image($x4_path, $x2_path, 450, 80);
-
-            $x3_path = $filename.$file_name_x3;
-            $this->compressed_image($x4_path, $x3_path, 600, 90);
-
-            // 3. 上传到七牛云
-            $qiniu = new QiniuConfig(); // 实例化七牛云
-
-            $res_x1 = $qiniu->qiniu_upload_api($x1_path, $img_name.'_x1');
-            $res_x2 = $qiniu->qiniu_upload_api($x2_path, $img_name.'_x2');
-            $res_x3 = $qiniu->qiniu_upload_api($x3_path, $img_name.'_x3');
-            if ($x4 == 'x4'){
-                $res_x4 = $qiniu->qiniu_upload_api($x4_path, $img_name.'_x4');
-            }else{
-                $res_x4 = ['x4'];
+            $pattern = substr(strrchr($img_url, '.'), 1); // 正则文件格式
+            $filename = $path.$file;
+            if(!file_exists($filename)){
+                //检查是否有该文件夹，如果没有就创建，并给予最高权限
+                mkdir($filename, 0755, true);
             }
 
-            // 4. 返回结果
-            $file_name = [$file_name_x1, $file_name_x2, $file_name_x3, $file_name_x4];
-            $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
-            $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
+            if (!$pattern){
+                $state = 0;
+                $msg = "文件似乎无后缀，无法识别和保存文件";
+                $content =  [];
 
-            // 记录日志
-            $log = new Log();
-            $log->write_log('save_url_img', $qiniu_info);
+                // 记录日志
+                $log = new Log();
+                $log->write_log('save_url_img', [$img_url, $msg]);
 
-            $state = 1;
-            $msg = "文件操作成功；x1低画质，x2中画质，x3高画质，x4原图；七牛云返回值情况请查看键qiniu_info。";
-            $content =  ["file_name"=>$file_name, "qiniu_info"=>$res_x3];
+            }else{
+
+                $img_name = $this->file_name_create($pattern); // 随机生成文件名
+
+                $file_name_x1 = $img_name.'_x1.'.$pattern;
+                $file_name_x2 = $img_name.'_x2.'.$pattern;
+                $file_name_x3 = $img_name.'_x3.'.$pattern;
+                $file_name_x4 = $img_name.'_x4.'.$pattern;
+
+                $x4_path = $filename.$file_name_x4; // 文件存放地址
+
+                // 1. 下载并保存图片
+                try {
+
+                    $img = file_get_contents($img_url);
+                    file_put_contents($x4_path, $img);
+
+                }catch (Exception $exception){
+                    $state = 0;
+                    $msg = '链接似乎是一个防盗链图片或是一个404图片，操作中断';
+                    $content =  ["file_name"=>'', "qiniu_info"=>'', "img"=> '', 'img_defender'=> $img_url,];
+
+                    $back = [
+                        "state"=> $state,
+                        "msg"=> $msg,
+                        "content"=> $content,
+                    ];
+
+                    return json_encode($back, JSON_UNESCAPED_UNICODE);
+                }
+
+                // 2. 压缩图片
+                // x1低画质，x2中画质，x3高画质，x4原图
+                $x1_path = $filename.$file_name_x1;
+                $this->compressed_image($x4_path, $x1_path, 300, 70);
+
+                $x2_path = $filename.$file_name_x2;
+                $this->compressed_image($x4_path, $x2_path, 450, 80);
+
+                $x3_path = $filename.$file_name_x3;
+                $this->compressed_image($x4_path, $x3_path, 600, 90);
+
+                // 3. 上传到七牛云
+                $qiniu = new QiniuConfig(); // 实例化七牛云
+
+                $res_x1 = $qiniu->qiniu_upload_api($x1_path, $img_name.'_x1');
+                $res_x2 = $qiniu->qiniu_upload_api($x2_path, $img_name.'_x2');
+                $res_x3 = $qiniu->qiniu_upload_api($x3_path, $img_name.'_x3');
+                if ($x4 == 'x4'){
+                    $res_x4 = $qiniu->qiniu_upload_api($x4_path, $img_name.'_x4');
+                }else{
+                    $res_x4 = ['x4'];
+                }
+
+                // 4. 返回结果
+                $file_name = [$file_name_x1, $file_name_x2, $file_name_x3, $file_name_x4];
+                $x_path = [$x1_path, $x2_path, $x3_path, $x4_path];
+                $qiniu_info = [$res_x1, $res_x2, $res_x3, $res_x4];
+
+                $img_info = $res_x3;
+                $img = $file_name_x3;
+
+                // 记录日志
+                $log = new Log();
+                $log->write_log('save_url_img', $qiniu_info);
+
+                $state = 1;
+                $msg = "文件操作成功；x1低画质，x2中画质，x3高画质，x4原图；七牛云返回值情况请查看键qiniu_info。";
+                $content =  ["file_name"=>$file_name, "qiniu_info"=>$img_info, "img"=> $img];
+
+            }
+
         }
+
 
         $back = [
             "state"=> $state,

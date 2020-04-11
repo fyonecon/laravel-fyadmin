@@ -1,2 +1,0 @@
-2019-11-04 00:53:37 '服务器IP："::1"；日志来源："OpenController !is_post()"；日志内容：{"state":403,"msg":"此接口仅限POST，拒绝访问(Open)","content":["::1","is_get()"]}'
-

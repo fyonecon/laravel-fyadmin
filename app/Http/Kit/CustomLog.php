@@ -41,8 +41,8 @@ class CustomLog{
         $timeout_day = config_log()['timeout_day'];
         if ($timeout_day < 7){
             $timeout_day = 7;
-        }else if ($timeout_day > 100){
-            $timeout_day = 100;
+        }else if ($timeout_day > 400){
+            $timeout_day = 400;
         }
         $len = $timeout_day*50;
         for ($i=0; $i<$len; $i++){
@@ -70,6 +70,11 @@ class CustomLog{
         return $file_name;
     }
 
+
+    public function __call($func_name, $args){
+        $txt = "class：".__CLASS__." ，函数不存在：$func_name ，参数：$args ";
+        exit($txt);
+    }
 
 
 }

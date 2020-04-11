@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Controllers\Enhance\Log;
 use App\Http\Kit\IpInfo;
-use App\Http\Controllers\App\CheckLogin;
+use App\Http\Controllers\AppWeb\UserCheckLogin;
 
 class WebSafeCheck extends Controller{
 
@@ -27,7 +27,7 @@ class WebSafeCheck extends Controller{
      * 继承该class需要运行__construct
      * */
     protected function __construct(Request $request){
-        header('Access-Control-Allow-Origin:*');
+
         $debug_key = $request->input('debug_key');
         // 记录调试日志
         $log = new Log();
@@ -42,27 +42,20 @@ class WebSafeCheck extends Controller{
 
         }else{
 
-            if (!is_post()){
-                $back = [
-                    'state'=> 403,
-                    'msg'=> '此接口仅限POST，拒绝访问(WebSafe)',
-                    'content'=> [$ip->get_real_ip(), 'is_get()'],
-                ];
-                exit(json_encode($back, JSON_UNESCAPED_UNICODE));
-            }else{
-                // 其他操作
-
-
+            if (is_post() || is_options()){
 
                 // 安全校验
                 $user_token = $request->input('user_token');
                 $app_class = $request->input('app_class');
 
-                if ($user_token == 'test'){ // 白名单token
+                $white_token_array = ['zhuanzhuanle', 'tpl@request@token']; // 白名单token
+
+                if (in_array($user_token, $white_token_array)){
+                    // 白名单token验证通过
 
                 }else{
 
-                    $user_login = new CheckLogin();
+                    $user_login = new UserCheckLogin();
                     $check_app_token = $user_login->check_app_token($user_token);
 
                     $state = $check_app_token['state'];
@@ -76,6 +69,7 @@ class WebSafeCheck extends Controller{
                         // 验证不通过
                         $back = [
                             'state'=> 0,
+                            'encode'=> 'utf-8',
                             'msg'=> $msg,
                             'content'=> '',
                         ];
@@ -83,6 +77,7 @@ class WebSafeCheck extends Controller{
                     }else{
                         $back = [
                             'state'=> 403,
+                            'encode'=> 'utf-8',
                             'msg'=> '未知状态，拒绝访问',
                             'content'=> '',
                         ];
@@ -91,9 +86,16 @@ class WebSafeCheck extends Controller{
 
                 }
 
-
-
+            }else{
+                $back = [
+                    'state'=> 403,
+                    'encode'=> 'utf-8',
+                    'msg'=> '此接口仅限POST或OPTIONS，拒绝访问(WebSafe)',
+                    'content'=> [$ip->get_real_ip(), is_post()],
+                ];
+                exit(json_encode($back, JSON_UNESCAPED_UNICODE));
             }
+
 
         }
 

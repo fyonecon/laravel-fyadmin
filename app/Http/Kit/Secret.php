@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  《PHP对称加密算法》
+ *  《PHP对称加密算法-变形base64》
  * */
 
 namespace App\Http\Kit;
@@ -15,6 +15,11 @@ class Secret{
      * 因为最终加密的字符串长度会x2，因此，加密场景适合加密字符串不是特别巨大的地方。
      * 代码一共有三处自定义地方，根据注释更改自定义内容。
      * 现有加密破解差不多需要万(亿)亿次。
+     *
+     * 体积变大几乎2倍
+     *
+     * 用于加密 参数、token、用户名、身份证、地址，但不推荐直接加密用户密码（加密密码请使用非对称加密）
+     *
      * 2019-03-23
      * github.com/fyonecon
      *
@@ -24,7 +29,7 @@ class Secret{
      *
      * */
 
-    private $secret_key = 'fya19'; // 自定义。 密钥：字母、数字、中文等任意内容
+    private $secret_key = 'test19'; // 自定义。 密钥：字母、数字、中文等任意内容
     private $salt = 17; // 自定义。 容错度：数字范围[0, 63]
     private $s = 1; // 不要更改
 
@@ -33,15 +38,6 @@ class Secret{
         ['/', 'gej1n'], // 必须
         ['+', 'hbua1'], // 必须
         ['3', '2nvge'],
-        ['7', '16lo0'],
-        ['8', 'uhws4'],
-        ['9', 'i00o6'],
-        ['L', 'l0ieg'],
-        ['M', 'lmvsk'],
-        ['W', 'aiinh'],
-        ['z', 'e1ifg'],
-        ['y', 'a4bcs'],
-        ['d', 'al2fj'],
         ['p', 'jaoi0'],
     ];
 
@@ -196,16 +192,10 @@ class Secret{
         return trim($data);
     }
 
+
+    public function __call($func_name, $args){
+        $txt = "class：".__CLASS__." ，函数不存在：$func_name ，参数：$args ";
+        exit($txt);
+    }
+
 }
-
-
-// 测试算法
-//$secret = new \app\admin\controller\Secret();
-//
-//$res1 = $secret->encode('=你好abc123n');
-//echo "加密：" . $res1;
-//
-//echo '<hr/>';
-//
-//$res2 = $secret->decode($res1);
-//echo "解密：" . $res2;

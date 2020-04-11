@@ -10,6 +10,46 @@ use Exception;
 
 class IpInfo{
 
+    // 获取IP
+    public function get_real_ip(){
+
+        $ip = FALSE;
+        //客户端IP 或 NONE
+        if(!empty($_SERVER["HTTP_CLIENT_IP"])){
+            $ip = $_SERVER["HTTP_CLIENT_IP"];
+        }
+
+        //多重代理服务器下的客户端真实IP地址（可能伪造）,如果没有使用代理，此字段为空
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ips = explode (", ", $_SERVER['HTTP_X_FORWARDED_FOR']);
+            if ($ip) { array_unshift($ips, $ip); $ip = FALSE; }
+
+            for ($i = 0; $i < count($ips); $i++) {
+                if ($ips[$i] == '127.0.0.1' || $ips[$i] == 'localhost'){
+                    $ip = '127.0.0.1';
+                    break;
+                }else{
+
+                    // UC浏览器会拦截eregi()
+                    if (is_uc()){
+                        $ip = $ips[$i];
+                    }else{
+                        $w_ip = eregi("^(10│172.16│192.168).", $ips[$i]);
+                        if (!$w_ip) {
+                            $ip = $ips[$i];
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+        //客户端IP 或 (最后一个)代理服务器 IP
+        return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
+    }
+
+
+
 
     public function get_user_ip(){
 
@@ -22,7 +62,7 @@ class IpInfo{
         $ip_info = new IpInfo();
 
         $ip = $ip_info->get_real_ip();
-        $city = $ip_info->getCity($ip);
+        $city = $ip_info->get_ip_city($ip, 'baidu');
         $device = $ip_info->os_info().'、'.$ip_info->browser_info().'、'.$ip_info->lang_info();
 
         if ($city->{'status'} === 1){
@@ -43,46 +83,29 @@ class IpInfo{
 
     }
 
-    // 获取IP
-    public function get_real_ip(){
 
-        $ip = FALSE;
-        //客户端IP 或 NONE
-        if(!empty($_SERVER["HTTP_CLIENT_IP"])){
-            $ip = $_SERVER["HTTP_CLIENT_IP"];
+    // 获取IP对应的城市-
+    public function get_ip_city($ip, $class = 'baidu'){
+
+        if ($class == 'baidu'){ // 限中国，不稳定
+            $url = "http://api.map.baidu.com/location/ip?ak=2TGbi6zzFm5rjYKqPPomh9GBwcgLW5sS&ip={$ip}&coor=bd09ll";
+            $content = request_option($url, 'get', [], true);
+            // {"status":1,"message":"Internal Service Error:ip[7.193.13.255] loc failed"}
+        }else if ($class == 'tianqiapi'){ // 大陆IP库，日免费5000次，速度快
+            $url = "https://ip.tianqiapi.com/?ip={$ip}";
+            $content = request_option($url, 'get', [], true);
+            // {"ip":"27.193.13.255","country":"\u4e2d\u56fd","province":"\u5c71\u4e1c\u7701","city":"\u9752\u5c9b\u5e02","isp":"\u8054\u901a"}
+        }else if($class == 'ip.sb'){ // 全球IP库，免费库，速度中
+            $url = "https://api.ip.sb/geoip/$ip";
+            $content = request_option($url, 'get', [], true);
+            // {"organization":"Mountain View Communications","longitude":143.2104,"timezone":"Australia\/Sydney","isp":"Mountain View Communications","offset":39600,"asn":13335,"asn_organization":"CLOUDFLARENET","country":"Australia","ip":"1.1.1.1","latitude":-33.494,"continent_code":"OC","country_code":"AU"}
+            // {"organization":"China Telecom","longitude":112.3792,"city":"Yiyang","timezone":"Asia\/Shanghai","isp":"China Telecom","offset":28800,"region":"Hunan","asn":4134,"asn_organization":"No.31,Jin-rong Street","country":"China","ip":"223.146.234.72","latitude":26.3889,"continent_code":"AS","country_code":"CN","region_code":"HN"}
+        }else{
+            $content = '';
         }
 
-        //多重代理服务器下的客户端真实IP地址（可能伪造）,如果没有使用代理，此字段为空
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ips = explode (", ", $_SERVER['HTTP_X_FORWARDED_FOR']);
-            if ($ip) { array_unshift($ips, $ip); $ip = FALSE; }
-
-            for ($i = 0; $i < count($ips); $i++) {
-                if ($ips[$i] == '127.0.0.1' || $ips[$i] == 'localhost'){
-                    $ip = '127.0.0.1';
-                    break;
-                }else{
-                    $w_ip = eregi("^(10│172.16│192.168).", $ips[$i]);
-
-                    if (!$w_ip) {
-                        $ip = $ips[$i];
-                        break;
-                    }
-                }
-            }
-        }
-        //客户端IP 或 (最后一个)代理服务器 IP
-        return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
+        return $content;
     }
-
-    // 获取所在城市
-    public function getCity($ip){
-        // 获取当前位置所在城市
-        $getIp = $ip;
-        $content = file_get_contents("http://api.map.baidu.com/location/ip?ak=2TGbi6zzFm5rjYKqPPomh9GBwcgLW5sS&ip={$getIp}&coor=bd09ll");
-        return json_decode($content);
-    }
-
 
     // 操作系统
     public function os_info() {
@@ -98,8 +121,6 @@ class IpInfo{
                 $os = 'Unix';
             } else if (preg_match('/bsd/i', $os)) {
                 $os = 'BSD';
-            } else {
-                $os = 'Other';
             }
             return $os;
         } else {
@@ -121,8 +142,6 @@ class IpInfo{
                 $br = 'Safari';
             } else if (preg_match('/Opera/i', $br)) {
                 $br = 'Opera';
-            } else {
-                $br = 'Other';
             }
             return $br;
         } else {
@@ -149,5 +168,9 @@ class IpInfo{
     }
 
 
+    public function __call($func_name, $args){
+        $txt = "class：".__CLASS__." ，函数不存在：$func_name ，参数：$args ";
+        exit($txt);
+    }
 
 }

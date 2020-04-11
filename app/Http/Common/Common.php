@@ -3,6 +3,8 @@
  * 不需要封装的公共函数，公共参数配置；
  * 框架任何文件都可调用；
  * 直接调用。
+ * @param $txt
+ * @return string
  */
 
 
@@ -10,25 +12,45 @@ function test_common($txt){
     return $txt.'=Common.php';
 }
 
+// 接口主网址
+function config_api_url(){
+    return [
+        'api_url'=> 'https://xxx.com/cswd/public/index.php/api/',
+    ];
+}
+
+// 配置微信支付退款
+function config_wx_refund(){
+    return [
+        'wx_web_refund_api'=> 'https://xxx.com/wx/h5/pay/api_order_refund.php',
+        'wx_web_refund_api_cswx'=> 'https://xxx.com/wx/cs_api/pay/api_order_refund.php',
+    ];
+}
+
 // 配置微信网页分享
 function config_wxweb_share(){
     $info = [
-        'appid'=> 'wx25',
-        'appsecret'=> '3602b',
+        'appid'=> 'wx117xxx',
+        'appsecret'=> '3403fbfxxx',
     ];
     return $info;
 }
 
+// 配置图片地址的主网址
+function config_img_domain(){
+    return [
+        'university_logo_img_domain'=> '//api.xxx.com/cswd/storage/upload_file/university_logo/',
+    ];
+}
 
 // 配置七牛云
 function config_qiniu(){
     $info = [
         'accessKey'=> 'sjLe9UAn3b8pNAqZW5CiKmNhiQYguqDr7_0_Iv7Q',
         'secretKey'=> 'CXUZS1F55dI6DimtMFOKLziJ4v34Wijo7NOnzu25',
-        'domain'=> ['http://qiniu-test.meishid.cn/'], // 多域名卸载数组里即可
+        'domain'=> ['//img.meishid.cn/'], // 多域名卸载数组里即可
         'bucket'=> 'test', // bucket名字
     ];
-    
     return $info;
 }
 
@@ -38,7 +60,7 @@ function config_log(){
     $info = [
         'local_server_ip'=> server_info()['server_ip'], // 本机服务器IP ，动态获取
         'log_server_ip'=> '127.0.0.1', // 存放日志的服务器IP，没有的话就填127.0.0.1
-        'timeout_day' => 14, // 多少天后自定删除，[7, 100]
+        'timeout_day' => 200, // 多少天后自定删除，[7, 400]
         'log_key'=> debug_key(),
     ];
     return $info;
@@ -47,7 +69,7 @@ function config_log(){
 
 // 配置调试key，方便调试环境
 function config_debug_key(){
-    return date('Ymd');
+    return date('Yd').'-test';
 }
 
 // 随机生成6位验证码，去除不好寓意的数字，比如4
@@ -122,11 +144,34 @@ function json_to_array($object_data){
 function array_to_json($array_data){
     return json_encode($array_data, JSON_UNESCAPED_UNICODE);
 }
+// 将string转换成array
+function string_to_array($string_data){
+    return json_decode($string_data, true);
+}
+// 万能转换，不需要知道数据格式就可以转换成array
+function type_to_array($data){
+    if (is_string($data)){
+        $res = json_decode($data, true);
+        $type = 'string';
+    }else if (is_object($data)){
+        $res = json_decode(json_encode($data),true);
+        $type = 'object';
+    }else if (is_array($data)){
+        $res = $data;
+        $type = 'array';
+    }else{
+        $res = [];
+        $type = gettype($data);
+    }
+
+    return ['data'=>$res, 'type'=> $type];
+}
+
 
 
 // 密码加密算法，非对称
 function pwd_encode($string){
-    $salt = '-P9_fy';
+    $salt = '-PwD2019_fy';
     $encode = md5($string.$salt);
 
     return $encode;
@@ -138,10 +183,44 @@ function debug_key(){
     return config_debug_key();
 }
 
+// 生成日期毫秒时间戳，后三位是毫秒数，(strlen=17)
+function get_date_millisecond(){
+    $time = date('YmdHis'); // s
+    $micro_time = floor(explode(' ', microtime())[0]*1000); // ms
+
+    if (!$micro_time || $micro_time <= 0){ // 0
+        $_micro_time = '000';
+    } else if ($micro_time < 10 && $micro_time > 0){ // (0, 9)
+        $_micro_time = '00'.$micro_time;
+    }else if ($micro_time >= 10 && $micro_time <= 99){ // [10, 99]
+        $_micro_time = '0'.$micro_time;
+    }else{ // >= 100
+        $_micro_time = $micro_time;
+    }
+
+    $that_time = ($time.''.$_micro_time); // 日期毫秒时间戳
+
+    return $that_time;
+}
+
 // 生成毫秒时间戳
-function get_millisecond() {
-    list($microsecond , $time) = explode(' ', microtime()); //' '中间是一个空格
-    return (float)sprintf('%.0f',(floatval($microsecond)+floatval($time))*1000);
+function get_micro_millisecond() {
+    $time = time(); // s
+    $micro_time = floor(explode(' ', microtime())[0]*1000); // ms
+
+    if (!$micro_time || $micro_time <= 0){ // 0
+        $_micro_time = '000';
+    } else if ($micro_time < 10 && $micro_time > 0){ // (0, 9)
+        $_micro_time = '00'.$micro_time;
+    }else if ($micro_time >= 10 && $micro_time <= 99){ // [10, 99]
+        $_micro_time = '0'.$micro_time;
+    }else{ // >= 100
+        $_micro_time = $micro_time;
+    }
+
+    $that_time = ($time.''.$_micro_time); // 毫秒时间戳
+
+    return $that_time;
 }
 // 统一日期格式，2019/1/5或2019/01/05或2019-1-5或2019-01-05统一保存成20190105010159
 function to_time($_time){
@@ -223,6 +302,11 @@ function array_change_date($array, $key, $date_model=null){
 
     for($i=0; $i<count($array); $i++){ // 替换键、值对
         $_time = $array[$i][$key];
+
+        if (strlen($_time) > 14){
+            $_time = substr($_time, 0, 14);
+        }
+
         $new_value = date($date_model, strtotime($_time));
         $array[$i][$key] = $new_value; // 替换新值
     }
@@ -287,19 +371,19 @@ function order_key_array($array, $key, $order){
 }
 
 
-// 利用数组去重数组+json这样的一维数组，一般为直接从数据库查询的数组结果，去重某个键
+// 一维数组去重，一般为直接从数据库查询的数组结果，去重某个键
 // group_array(未去重数组, 要去重的json键名)
-// 服务器环境不能使用group语法,所以做这个去重
-function group_array($info, $db_key){
+function group_array($db_array, $db_key){
     $have = [];
     $array = [];
-    for($m=0; $m<count($info); $m++){
-        $has_id = $info[$m][$db_key];
+
+    for($m=0; $m<count($db_array); $m++){
+        $has_id = $db_array[$m][$db_key];
         $array[] = $has_id;
     }
     $array = array_unique($array); // 返回 索引键=>id
     foreach ($array as $key=>$value){
-        $have[] = $info[$key];
+        $have[] = $db_array[$key];
     }
 
     return $have;
@@ -307,15 +391,14 @@ function group_array($info, $db_key){
 
 
 // 两个键去重，两个键为相同值时去重
-function group_arrays($info, $db_key1, $db_key2){
-
+function group_arrays($db_array, $db_key1, $db_key2){
     $have = [];
     $array = [];
     $index = [];
 
-    for($m=0; $m<count($info); $m++){
-        $has1 = $info[$m][$db_key1];
-        $has2 = $info[$m][$db_key2];
+    for($m=0; $m<count($db_array); $m++){
+        $has1 = $db_array[$m][$db_key1];
+        $has2 = $db_array[$m][$db_key2];
 
         if (in_array([$has1=>$has2], $array)){
             // 存在则跳过
@@ -326,10 +409,59 @@ function group_arrays($info, $db_key1, $db_key2){
     }
 
     foreach ($index as $value){
-        $have[] = $info[$value];
+        $have[] = $db_array[$value];
     }
 
     return $have;
+}
+
+
+// get、post
+function request_option($request_url='', $method='post', $request_data=[], $to_json=false){
+    if (empty($request_url)) {
+        $back = '{"state":0, "msg":"request_url is null", "content":""}';
+    }else{
+
+        if ($method == 'post'){
+
+            $body = http_build_query($request_data);
+            $options = [
+                'http' => [
+                    'method' => 'POST', // 注意要大写
+                    'header' => 'Content-type:application/x-www-form-urlencoded',
+                    'content' => $body,
+                ],
+            ];
+            $context = stream_context_create($options);
+            $data = file_get_contents($request_url, false, $context);
+
+            $back = $data;
+        }else if ($method == 'get'){
+
+            $body = http_build_query($request_data);
+            $options = [
+                'http' => [
+                    'method' => 'GET', // 注意要大写
+                    'header' => 'Content-type:application/x-www-form-urlencoded',
+                ],
+            ];
+            $context = stream_context_create($options);
+            $data = file_get_contents($request_url.$body, false, $context);
+
+            $back = $data;
+        }else{
+            $back = '{"state":0, "msg":"method error. method is only in [get, post], options etc be not supported.", "content":""}';
+        }
+
+    }
+
+    if ($to_json == true){
+        $res = json_decode($back, true);
+    }else{
+        $res = $back;
+    }
+
+    return $res;
 }
 
 
@@ -381,6 +513,12 @@ function request_get($get_url = ''){
 if(!function_exists('is_post')){
     function is_post(){
         return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='POST';
+    }
+}
+// 判断是否为OPTIONS
+if(!function_exists('is_options')){
+    function is_options(){
+        return isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD'])=='OPTIONS';
     }
 }
 // 判断是否为get
@@ -447,7 +585,9 @@ function is_json($data = '', $assoc = false) {
 
 // 过滤js
 function filter_script($string_has_script){
-    return preg_replace("/<(script.*?)>(.*?)<(\/script.*?)>/si","", $string_has_script);
+    $string_has_script = preg_replace("'<script[^>]*?>.*?</script>'si"," ", $string_has_script);
+    $string_has_script = str_replace('script', 'xss', $string_has_script);
+    return $string_has_script;
 }
 // 过滤style
 function filter_style($string_has_style){
@@ -702,3 +842,138 @@ function get_maybe($_v){
 
     return $num;
 }
+
+
+// 获取当前访问的完整url
+function get_url() {
+    $url = 'http://';
+    if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        $url = 'https://';
+    }
+
+    $url .= $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'];
+
+    return $url;
+}
+
+
+/*
+ * 根据元素数字大小占比概率，得出此次中奖的index索引
+ *
+$array = [901, 802, 803, 954, 185, 106, 106];
+$new_array = $array;
+for ($n=0; $n<2; $n++){
+    $new_array_info = choujiang_order($new_array);
+    $new_array = $new_array_info['new_order_array'];
+
+    // var_dump($new_array);
+    var_dump($new_array_info);
+}
+ * */
+function choujiang_order($_order_array){
+    $order_array = $_order_array; // 为得分数组添加新键
+
+    $order_sum_layer = []; // 数组和等级数组
+    $that_sum = 0;
+
+    foreach ($order_array as $key=>$value){
+        $this_sum = $value;
+        $that_sum = $that_sum + $this_sum;
+
+        $order_sum_layer[] = $that_sum;
+    }
+
+    $sum_order = $order_sum_layer[count($order_sum_layer)-1]; // 最后一个即数组元素和
+    $rand_num = rand(0, $sum_order); // 产生随机数
+
+    $order_sum_layer[] = $rand_num;
+    sort($order_sum_layer);
+
+    $keys = array_keys($order_sum_layer, $rand_num);
+
+    $index = $keys[rand(0, count($keys)-1)];
+
+    $res_index = $index-1;
+    if ($res_index <= 0){
+        $res_index = array_keys($order_array)[0];
+    }
+    unset($order_array[$res_index]);
+
+    $back = [
+        'old_index'=>$res_index,
+        'rand_num'=>$rand_num,
+        'new_order_array'=>$order_array,
+        'old_order_array'=>$_order_array,
+        'order_sum_layer'=>$order_sum_layer,
+    ];
+
+    return $back;
+}
+
+
+
+// 判断是否是uc浏览器
+function is_uc(){
+    if(strpos($_SERVER['HTTP_USER_AGENT'],'UCBrowser') !== false || strpos($_SERVER['HTTP_USER_AGENT'],'UCWEB') !== false){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+// 判断是否是qq浏览器
+function is_qq(){
+    if(strpos($_SERVER['HTTP_USER_AGENT'],'MQQBrowser')!==false){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+
+//
+function replace_unicode_escape_sequence($match){
+    return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+}
+//
+function make_unicode($str){
+    $bin_str = '';
+    $arr = is_array($str) ? $str : str_split($str); // 获取字符内部数组表示
+
+    foreach ($arr as $value){
+        $bin_str .= decbin(ord($value));
+    } // 转成数字再转成二进制字符串
+
+    $bin_str = preg_replace('/^.{4}(.{4}).{2}(.{6}).{2}(.{6})$/', '$1$2$3', $bin_str); // 正则截取
+
+    $unicode = dechex(bindec($bin_str)); // 返回unicode十六进制
+    $_sup = '';
+
+    for ($i = 0; $i < 4 - strlen($unicode); $i++){
+        $_sup .= '0'; // 补位高字节 0
+    }
+
+    return '\\u' . $_sup . $unicode; //加上 \u 返回
+}
+
+// Unicode解码
+function unicode_decode($str){
+
+    return preg_replace_callback('/\\\\u([0-9a-f]{4})/i', 'replace_unicode_escape_sequence', $str);
+}
+// Unicode编码
+function unicode_encode($str){
+    $_arr_str = preg_split('/(?<!^)(?!$)/u', $str); //拆分字符串为数组(含中文字符)
+    $_ret_unicode = '';
+
+    foreach ($_arr_str as $_str) {
+        $_ret_unicode .= make_unicode($_str);
+    }
+
+    return $_ret_unicode;
+}
+
+
+

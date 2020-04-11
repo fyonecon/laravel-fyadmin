@@ -31,8 +31,8 @@ class AliSMS {
             $code_number = (string)$_code_number;
 
             // 以下全部代码在你设置好两个模板后就会有，然后直接从阿里云后台复制过来即可。
-            AlibabaCloud::accessKeyClient('LTAIADXV', 'cBe6sUCPuAr')
-                ->regionId('cn-hangzhou')
+            AlibabaCloud::accessKeyClient('', '')
+                ->regionId('')
                 ->asDefaultClient();
 
             try {
@@ -83,5 +83,9 @@ class AliSMS {
     }
 
 
+    public function __call($func_name, $args){
+        $txt = "class：".__CLASS__." ，函数不存在：$func_name ，参数：$args ";
+        exit($txt);
+    }
 
 }

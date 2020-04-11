@@ -1,8 +1,0 @@
-2019-10-07 02:02:07 '服务器IP："::1"；日志来源："AdminSafeCheck !is_post"；日志内容：{"state":403,"msg":"此接口仅限POST，拒绝访问(Admin)","content":""}'
-
-2019-10-07 02:03:01 '服务器IP："::1"；日志来源："AdminSafeCheck debug_key"；日志内容：{"debug_key":"07102019","debug_key_input":"07102019","ip":"::1"}'
-
-2019-10-07 02:13:19 '服务器IP："::1"；日志来源："AdminSafeCheck debug_key"；日志内容：{"debug_key":"07102019","debug_key_input":"07102019","ip":"::1"}'
-
-2019-10-07 02:13:22 '服务器IP："::1"；日志来源："AdminSafeCheck debug_key"；日志内容：{"debug_key":"07102019","debug_key_input":"07102019","ip":"::1"}'
-

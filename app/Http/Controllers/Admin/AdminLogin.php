@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\OpenController;
-use App\Http\Controllers\Admin\CheckLogin;
+use App\Http\Controllers\LoginSafeCheck;
+use App\Http\Controllers\Admin\AdminCheckLogin;
 use App\Http\Kit\Secret;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 
-class AdminLogin extends OpenController {
+class AdminLogin extends LoginSafeCheck {
 
     public function __construct(Request $request){
         parent::__construct($request);
@@ -126,6 +126,7 @@ class AdminLogin extends OpenController {
 
         $back = [
             'state'=>$state,
+            'encode'=> 'utf-8',
             'msg'=>$msg,
             'test_data'=>$test_data,
             'content'=>$content,
@@ -145,7 +146,7 @@ class AdminLogin extends OpenController {
         $user_login_token = $request->input('login_token');
 
         if ($user_login_token || $user_login_name){
-            $check_login = new CheckLogin();
+            $check_login = new AdminCheckLogin();
 
             $back = $check_login->safe_check($user_login_name, $user_login_token);
         }else {
@@ -156,6 +157,7 @@ class AdminLogin extends OpenController {
 
             $back = [
                 'state'=>$state,
+                'encode'=> 'utf-8',
                 'msg'=>$msg,
                 'login_href'=>'login.php?login=must',
                 'content'=>$content,

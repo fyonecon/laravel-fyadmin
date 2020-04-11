@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Test;
 
 use App\Http\Controllers\AdminSafeCheck;
-use App\Http\Controllers\AppSafeCheck;
-use App\Http\Controllers\OpenController;
-use App\Http\Controllers\Enhance\GetIp;
+use App\Http\Controllers\LoginSafeCheck;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Enhance\Log;
 
@@ -86,6 +84,97 @@ class Test1 extends AdminSafeCheck {
 
     public function test5(){
         echo 'test5';
+
+
+        $json = '{
+	"state": 1,
+	"msg": "完成",
+	"help": "tag_id_string值格式如\"#@1#@12\"",
+	"content": {
+		"num": 9,
+		"question": [{
+			"model": "single",
+			"index": "1000001",
+			"title": "你想考[专硕]还是[学硕]？",
+			"option": [{
+				"item": "A. 专硕",
+				"score": "##1000001#&专硕#@2"
+			}, {
+				"item": "B. 学硕",
+				"score": "##1000001#&学硕#@1"
+			}]
+		}, {
+			"model": "single",
+			"index": "1000002",
+			"title": "你目前就读的院校级别？",
+			"option": [{
+				"item": "A. 211",
+				"score": "##1000002#&211#@3"
+			}, {
+				"item": "B. 985",
+				"score": "##1000002#&985#@2"
+			}, {
+				"item": "C. 34所自主划线",
+				"score": "##1000002#&34所自主划线#@1"
+			}, {
+				"item": "D. 其他",
+				"score": "##1000002#&其他#@"
+			}]
+		}, "single", "2000002", "你的英语最高水平？", [{
+			"item": "A. 六级",
+			"score": "##2000002#&六级#@1"
+		}, {
+			"item": "B. 四级",
+			"score": "##2000002#&四级#@2"
+		}, {
+			"item": "C. 四级以下",
+			"score": "##2000002#&四级以下#@3"
+		}, {
+			"item": "D. 未考",
+			"score": "##2000002#&未考#@"
+		}], {
+			"model": "single",
+			"index": "1000003",
+			"title": "你目前的最高学历？",
+			"option": [{
+				"item": "A. 统招本科",
+				"score": "##1000003#&统招本科#@0"
+			}, {
+				"item": "B. 非统招本科",
+				"score": "##1000003#&非统招本科#@0"
+			}, {
+				"item": "C. 大专",
+				"score": "##1000003#&大专#@0"
+			}, {
+				"item": "D. 其他",
+				"score": "##1000003#&其他#@"
+			}]
+		}, {
+			"model": "single",
+			"index": "1000004",
+			"title": "你每天可用于考研复习的时间？",
+			"option": [{
+				"item": "A. 6小时以上",
+				"score": "##1000004#&6h+#@0"
+			}, {
+				"item": "B. 4-6小时",
+				"score": "##1000004#&4_6h#@0"
+			}, {
+				"item": "C. 2-4小时",
+				"score": "##1000004#&2_4h#@0"
+			}, {
+				"item": "D. 小于2小时",
+				"score": "##1000004#&##2h-#@"
+			}]
+		}, {
+			"model": "input",
+			"index": "1000007",
+			"title": "你目前就读的大学是？",
+			"score": "##1000007#&@@"
+		}]
+	}
+}';
+
 
     }
 

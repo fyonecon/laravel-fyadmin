@@ -22,21 +22,11 @@ class VerifyCsrfToken extends Middleware
         /*
          * 系统扩展服务所依赖的的接口，不可更改
          * */
-        'enhance/upload_base64_file',
-        'enhance/upload_form_file',
-        'enhance/save_base64_img',
-        'enhance/save_url_img',
-        'enhance/log',
         'admin/login',
         'admin/login_check',
+        'enhance/log',
 
-        /*
-         * 其他接口
-         * */
-        // Admin端
-        'admin/list_user',
-        'admin/list_admin',
-        // App端
+
 
 
     ];

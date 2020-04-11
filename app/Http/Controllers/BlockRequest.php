@@ -1,7 +1,7 @@
 <?php
 /*
  * 请求次数超额的接口。
- * 与Kernel.php中的throttle不同。
+ * 与Kernel.php中的throttle不同，对IP和访问地址做了拦截。
  * */
 
 namespace App\Http\Controllers;

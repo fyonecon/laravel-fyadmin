@@ -187,4 +187,9 @@ class MakeImg {
 
 
 
+    public function __call($func_name, $args){
+        $txt = "class：".__CLASS__." ，函数不存在：$func_name ，参数：$args ";
+        exit($txt);
+    }
+
 }

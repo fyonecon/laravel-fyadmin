@@ -6,10 +6,15 @@
 
 namespace App\Http\Controllers\Enhance;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\EnhanceSafeCheck;
 use Illuminate\Http\Request;
 
-final class InitSys Extends Controller{
+final class InitSys Extends EnhanceSafeCheck{
+
+    final function __construct(Request $request){
+        parent::__construct($request);
+
+    }
 
     //
     final function init_sys(){
